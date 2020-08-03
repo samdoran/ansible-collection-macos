@@ -1,0 +1,66 @@
+- name: Create temp path
+  file:
+    path: "{{ macos_python_tmp_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: '0755'
+  tags:
+    - macos_python
+
+- name: Download Python installer
+  get_url:
+    url: "{{ _macos_python_pkg_url }}"
+    dest: "{{ macos_python_tmp_path }}"
+  register: download
+  notify: cleanup temp files
+  tags:
+    - macos_python
+
+- name: Install Python
+  command: installer -pkg {{ download.dest }} -target /
+  args:
+    creates: /Library/Frameworks/Python.framework/Versions/3.8
+  tags:
+    - macos_python
+
+- name: Install system CA certificates for Python
+  bootstrap_certs:
+  tags:
+    - macos_python
+    - macos_python_certs
+
+- name: Download and extract libyaml source
+  unarchive:
+    src: https://pyyaml.org/download/libyaml/yaml-{{ macos_python_guest_libyaml_version }}.zip
+    dest: "{{ macos_python_tmp_path }}"
+    creates: "{{ macos_python_tmp_path }}/yaml-{{ macos_python_guest_libyaml_version }}"
+    remote_src: yes
+  become: no
+  notify: cleanup temp files
+  when: macos_python_compile_libyaml | bool
+  tags:
+    - macos_python
+
+- name: Compile libyaml
+  shell: >
+    ./configure --enable-shared=no --with-pic --prefix={{ _macos_python_build_path }} --disable-dependency-tracking &&
+    make &&
+    make install
+  become: no
+  when: macos_python_compile_libyaml | bool
+  args:
+    chdir: "{{ macos_python_tmp_path }}/yaml-{{ macos_python_libyaml_version }}"
+  tags:
+    - macos_python
+
+- name: Install Python packages
+  pip:
+    executable: /usr/local/bin/pip3
+    extra_args: --user
+    name: "{{ macos_python_packages }}"
+  become: no
+  environment:
+    C_INCLUDE_PATH: "{{ _macos_python_build_path }}/include"
+    LIBRARY_PATH: "{{ _macos_python_build_path }}/lib"
+  tags:
+    - macos_python

@@ -1,0 +1,2 @@
+_macos_python_pkg_url: https://www.python.org/ftp/python/{{ macos_python_version }}/python-{{ macos_python_version }}-macosx10.9.pkg
+_macos_python_build_path: "{{ macos_python_tmp_path }}/build"

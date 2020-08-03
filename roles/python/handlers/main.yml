@@ -1,0 +1,5 @@
+- name: cleanup temp files
+  file:
+    path: "{{ macos_python_tmp_path }}"
+    state: absent
+  when: macos_python_cleanup_temp_files

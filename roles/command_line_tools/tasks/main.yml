@@ -1,0 +1,50 @@
+- name: Check for Xcode Command Line Tools
+  stat:
+    path: /Library/Developer/CommandLineTools
+  register: xcode_cl_tools
+  tags:
+    - macos_command_line_tools
+    - macos
+    - xcode
+
+- name: Install command line tools
+  when: not xcode_cl_tools.stat.exists
+  block:
+    - name: Create hidden install file
+      file:
+        path: /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        state: touch
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+    - name: List updates
+      command: softwareupdate -l
+      register: updates
+      changed_when: no
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+    - name: Install Xcode Command Line Tools
+      command: softwareupdate --install "{{ package_name }}"
+      args:
+        creates: /Library/Developer/CommandLineTools
+      vars:
+        package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) }}"
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+  always:
+    - name: Remove hidden install file
+      file:
+        path: /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        state: absent
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode

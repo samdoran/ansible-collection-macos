@@ -1,0 +1,19 @@
+galaxy_info:
+  role_name: command_line_tools
+  author: Sam Doran
+  description: Install Xcode Command Line Tools
+  company:
+  license: Apache 2.0
+  min_ansible_version: 2.9
+
+  platforms:
+  - name: macOS
+    versions:
+      - all
+      - any
+
+  galaxy_tags:
+    - development
+    - system
+    - macos
+    - xcode

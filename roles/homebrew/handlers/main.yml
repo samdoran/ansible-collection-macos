@@ -1,0 +1,5 @@
+- name: cleanup temp files
+  file:
+    path: "{{ homebrew_tmp_path }}"
+    state: absent
+  when: homebrew_cleanup_temp_files | bool

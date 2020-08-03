@@ -1,0 +1,20 @@
+galaxy_info:
+  role_name: homebrew
+  author: Sam Doran
+  description: Install Homebrew, the missing package manager for macOS.
+  company:
+  license: Apache 2.0
+  min_ansible_version: 2.9
+
+  platforms:
+  - name: macOS
+    versions:
+      - all
+      - any
+
+  galaxy_tags:
+    - development
+    - packaging
+    - system
+    - homebrew
+    - macos

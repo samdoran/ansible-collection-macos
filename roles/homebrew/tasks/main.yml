@@ -1,0 +1,71 @@
+- name: Create tempory directory
+  file:
+    path: "{{ homebrew_tmp_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: '0755'
+  tags:
+    - macos
+    - homebrew
+    - packages
+
+- name: Download Homebrew install script
+  get_url:
+    url: https://raw.githubusercontent.com/Homebrew/install/master/install.sh
+    dest: "{{ homebrew_tmp_path }}/install.sh"
+    mode: '0755'
+  become: no
+  notify: cleanup temp files
+  tags:
+    - macos
+    - homebrew
+    - packages
+
+- name: Install Homebrew
+  command: "{{ homebrew_tmp_path }}/install.sh"
+  args:
+    creates: /usr/local/bin/brew
+  become: no
+  tags:
+    - macos
+    - homebrew
+    - packages
+
+- name: Install Homebrew taps
+  homebrew_tap:
+    tap: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_taps | default([]) }}"
+  become: no
+  tags:
+    - macos
+    - homebrew
+    - packages
+    - cask
+
+- name: Install Homebrew packages
+  homebrew:
+    update_homebrew: yes
+    name: "{{ item.name | default(item) }}"
+    state: "{{ item.state | default('latest') }}"
+    install_options: "{{ item.install_options | default(omit) }}"
+  become: no
+  loop: "{{ homebrew_packages }}"
+  ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
+  tags:
+    - macos
+    - homebrew
+    - packages
+
+- name: Install Homebrew Cask apps
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_cask_apps }}"
+  ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
+  become: no
+  tags:
+    - macos
+    - homebrew
+    - packages
+    - cask
