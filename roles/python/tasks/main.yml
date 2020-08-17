@@ -31,9 +31,9 @@
 
 - name: Download and extract libyaml source
   unarchive:
-    src: https://pyyaml.org/download/libyaml/yaml-{{ macos_python_guest_libyaml_version }}.zip
+    src: https://pyyaml.org/download/libyaml/yaml-{{ macos_python_libyaml_version }}.zip
     dest: "{{ macos_python_tmp_path }}"
-    creates: "{{ macos_python_tmp_path }}/yaml-{{ macos_python_guest_libyaml_version }}"
+    creates: "{{ macos_python_tmp_path }}/yaml-{{ macos_python_libyaml_version }}"
     remote_src: yes
   become: no
   notify: cleanup temp files
