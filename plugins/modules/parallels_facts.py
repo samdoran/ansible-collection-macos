@@ -62,6 +62,8 @@ def main():
             'Edition': '',
             'Full': '',
             'Major': '',
+            'MajorMinor': '',
+            'Release': '',
         }
     }
     if prlsrvctl_bin is not None:
