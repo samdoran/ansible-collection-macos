@@ -1,0 +1,43 @@
+- name: Create install cache directory
+  file:
+    path: '{{ parallels_install_cache }}'
+    state: directory
+    owner: administrator
+    group: staff
+    mode: '0755'
+  tags:
+    - parallels
+
+- name: Get installed Parallels app info
+  parallels_facts:
+  tags:
+    - parallels
+    - always
+
+- name: Install Parallels
+  include_tasks:
+    file: install.yml
+    apply:
+      tags:
+        - parallels
+  when: parallels_app_version != ansible_facts.parallels.Version.Full
+  tags:
+    - parallels
+
+- name: Update Parallels facts
+  parallels_facts:
+  tags:
+    - parallels
+    - always
+
+- name: Assert the correct Parallels app version is installed and properly configured
+  assert:
+    that:
+      - parallels_app_version == ansible_facts.parallels.Version.Full
+      - ansible_facts.parallels.License.state == 'valid'
+      # this no longer seems to work, the start_pd_as_service config above is ignored in Parallels 13
+      # rebooting the server after completing the entire playbook run seems to enable the service automatically
+      - ansible_facts.parallels['Started as service'] == 'on'
+  ignore_errors: '{{ ansible_check_mode }}'
+  tags:
+    - parallels

@@ -1,0 +1,145 @@
+- name: Download Parallels app installer
+  get_url:
+    url: '{{ _parallels_app_url }}'
+    dest: '{{ _parallels_app_file }}'
+    owner: administrator
+    group: staff
+    mode: '0644'
+
+- name: Download Parallels auto-deploy package
+  get_url:
+    url: "{{ parallels_autodeploy_url }}"
+    dest: '{{ parallels_install_cache }}/pd-autodeploy.zip'
+    owner: administrator
+    group: staff
+    mode: '0644'
+
+- name: Get checksum of Parallels auto-deploy package
+  stat:
+    path: '{{ parallels_install_cache }}/pd-autodeploy.zip'
+    get_checksum: yes
+    checksum_algorithm: md5
+  register: autodeploy
+
+- name: Check for previous Parallels auto-deploy package extraction
+  stat:
+    path: '{{ parallels_install_cache }}/pd-autodeploy.md5'
+  register: previous_autodeploy_extracted
+
+- name: Get previous Parallels auto-deploy package checksum
+  slurp:
+    src: '{{ parallels_install_cache }}/pd-autodeploy.md5'
+  register: previous_autodeploy
+  when: previous_autodeploy_extracted.stat.exists
+
+- name: Calculate current auto-deploy package checksum
+  set_fact:
+    current_autodeploy_md5: '{{ autodeploy.stat.checksum }}'
+  when: "'checksum' in autodeploy.stat"
+
+- name: Calculate previous Parallels auto-deploy package checksum
+  set_fact:
+    previous_autodeploy_md5: '{{ previous_autodeploy.content | b64decode }}'
+  when: previous_autodeploy_extracted.stat.exists
+
+- name: Create a pd-autodeploy directory
+  file:
+    path: '{{ parallels_install_cache }}/pd-autodeploy'
+    state: directory
+    owner: administrator
+    group: staff
+    mode: '0755'
+
+- name:
+  # Avoid extracting every run due to changes made in the following tasks,
+  # which would then result in the following tasks reporting changed as well.
+  when: current_autodeploy_md5 | default('1') != previous_autodeploy_md5 | default('')
+  block:
+    - name: Extract the Parallels auto-deploy package
+      unarchive:
+        src: '{{ parallels_install_cache }}/pd-autodeploy.zip'
+        dest: '{{ parallels_install_cache }}/pd-autodeploy/'
+        list_files: yes
+        remote_src: yes
+
+    - name: Record checksum of extracted Parallels auto-deploy package
+      copy:
+        content: '{{ autodeploy.stat.checksum }}'
+        dest: '{{ parallels_install_cache }}/pd-autodeploy.md5'
+        owner: administrator
+        group: staff
+        mode: '0644'
+
+- name: Enumerate Parallels auto-deploy package files
+  find:
+    path: '{{ parallels_install_cache }}/pd-autodeploy/'
+    pattern: '*.pkg'
+    file_type: directory
+    recurse: yes
+  register: available_pkgs
+
+- name: Find Parallels auto-deploy package
+  set_fact:
+    autodeploy_package: '{{ available_pkgs.files | map(attribute="path") | first }}'
+
+- name: Define paths to Parallels auto-deploy package files
+  set_fact:
+    autodeploy_config: '{{ autodeploy_package }}/License Key and Configuration/deploy.cfg'
+    autodeploy_dmg: '{{ autodeploy_package }}/Parallels Desktop DMG/{{ _parallels_app_filename }}'
+
+- name: Set license key in Parallels auto-deploy package
+  replace:
+    path: '{{ autodeploy_config }}'
+    regexp: '^#* *license_key=".*"$'
+    replace: 'license_key="{{ parallels_license_key }}"'
+
+- name: Enable start-as-service in Parallels auto-deploy package
+  replace:
+    path: '{{ autodeploy_config }}'
+    regexp: '^#* *start_pd_as_service="yes"$'
+    replace: 'start_pd_as_service="yes"'
+
+- name: Disable auto-check for updates in Parallels auto-deploy package
+  replace:
+    path: '{{ autodeploy_config }}'
+    regexp: '^#* *updates_auto_check=".*"$'
+    replace: 'updates_auto_check="0"'
+
+- name: Disable auto-download for updates in Parallels auto-deploy package
+  replace:
+    path: '{{ autodeploy_config }}'
+    regexp: '^#* *updates_auto_download=".*"$'
+    replace: 'updates_auto_download="off"'
+
+- name: Copy the Parallels installer into the auto-deploy package
+  copy:
+    src: '{{ _parallels_app_file }}'
+    dest: '{{ autodeploy_dmg }}'
+    remote_src: yes
+    owner: administrator
+    group: staff
+    mode: '0644'
+
+- name: Install Parallels app using the auto-deploy package
+  command: installer -pkg "{{ autodeploy_package }}" -target /
+  become: yes
+  become_user: root
+  register: parallels_install
+  notify: remove cache directory
+
+- name: Fix permissions changed during Parallels app install
+  file:
+    path: /usr/local/share/man/man8
+    owner: administrator
+    state: directory
+    recurse: yes
+  become: yes
+  become_user: root
+  tags:
+    - parallels
+
+- name: Reboot
+  reboot:
+  when: parallels_install is changed
+  tags:
+    - parallels
