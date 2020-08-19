@@ -42,6 +42,25 @@ import json
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.process import get_bin_path
+from ansible.module_utils.common.text.converters import to_native
+
+# command: python -c 'import prlsdkapi; prlsdkapi.init_desktop_sdk(); print(prlsdkapi.ApiHelper().get_version()); prlsdkapi.deinit_sdk()'
+
+HAS_PARALLELS_SDK = True
+try:
+    import prlsdkapi
+except ImportError:
+    HAS_PARALLELS_SDK = False
+
+
+def get_sdk_version():
+    sdk_version = ''
+    if HAS_PARALLELS_SDK:
+        prlsdkapi.init_desktop_sdk()
+        sdk_version = prlsdkapi.ApiHelper().get_version()
+        prlsdkapi.deinit_sdk()
+
+    return to_native(sdk_version)
 
 
 def main():
@@ -85,6 +104,7 @@ def main():
             parallels_data['Version']['MajorMinor'] = full_version.split('-')[0]
             parallels_data['Version']['Release'] = full_version.split('-')[1]
 
+    parallels_data['sdk_version'] = get_sdk_version()
     results['ansible_facts']['parallels'] = parallels_data
 
     module.exit_json(**results)
