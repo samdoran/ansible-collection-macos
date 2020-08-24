@@ -24,6 +24,40 @@
   tags:
     - parallels
 
+# Check the system kernel extension database for the Parallels Team ID.
+# There so no good way to get this information easily from the system
+# at this time.
+#
+# https://kb.parallels.com/124289
+# https://kb.parallels.com/111693
+# https://support.jamfschool.com/hc/en-us/articles/115004701513-Whitelist-Kernel-Extensions
+#
+# Example output:
+#
+# $ sudo sqlite3 /var/db/SystemPolicyConfiguration/KextPolicy 'SELECT * FROM kext_policy;'
+# 4C6364ACXT|com.parallels.kext.netbridge|1|Parallels International GmbH|1
+# 4C6364ACXT|com.parallels.kext.vnic|1|Parallels International GmbH|1
+# 4C6364ACXT|com.parallels.kext.hypervisor|1|Parallels International GmbH|1
+# 4C6364ACXT|com.parallels.kext.usbconnect|1|Parallels International GmbH|1
+#
+- name: Check if Paralles kernel extensios are approved
+  command: sqlite3 /var/db/SystemPolicyConfiguration/KextPolicy 'SELECT COUNT(*) from kext_policy WHERE team_id = "4C6364ACXT";'
+  register: kernel_extension_policy
+  tags:
+    - parallels
+    - parallels_check
+
+- name: Check that Parallels kernel extensions are loaded
+  assert:
+    fail_msg: >
+      Parallels kernel extension is not loaded. Log into the GUI, open
+      System Preferencs > Security, and click Allow.
+    that:
+      - kernel_extension_policy.stdout | int >= 4  # This number is derived from the example output above
+  tags:
+    - parallels
+    - parallels_check
+
 - name: Update Parallels facts
   parallels_facts:
   tags:
@@ -41,3 +75,4 @@
   ignore_errors: '{{ ansible_check_mode }}'
   tags:
     - parallels
+    - parallels_check
