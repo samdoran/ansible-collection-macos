@@ -1,5 +1,0 @@
-- name: remove cache directory
-  file:
-    path:
-    state: absent
-  when: parallels_remove_cache | bool

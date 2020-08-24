@@ -1,13 +1,3 @@
-- name: Create install cache directory
-  file:
-    path: '{{ parallels_install_cache }}'
-    state: directory
-    owner: administrator
-    group: staff
-    mode: '0755'
-  tags:
-    - parallels
-
 - name: Get installed Parallels app info
   parallels_facts:
   tags:
