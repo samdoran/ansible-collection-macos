@@ -1,0 +1,4 @@
+parallels_sdk_version: '524288'  # version extracted from Python SDK after installation
+parallels_sdk_filename: 'ParallelsVirtualizationSDK-{{ parallels_app_version }}-mac.dmg'
+parallels_sdk_url: '{{ _parallels_base_url }}/{{ parallels_sdk_filename }}'
+parallels_sdk_file: '{{ parallels_install_cache }}/{{ parallels_sdk_filename }}'

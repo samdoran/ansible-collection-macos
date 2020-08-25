@@ -1,0 +1,29 @@
+- name: Get Parallels facts
+  parallels_facts:
+  tags:
+    - parallels_sdk
+    - always
+
+- name: Install SDK
+  when: parallels_sdk_version != ansible_facts.parallels.sdk_version
+  tags:
+    - parallels_sdk
+  block:
+    - name: Download Parallels SDK installer
+      get_url:
+        url: '{{ parallels_sdk_url }}'
+        dest: '{{ parallels_sdk_file }}'
+        owner: administrator
+        group: staff
+        mode: '0644'
+
+    - name: Attach Parallels SDK installer volume
+      command: hdiutil attach '{{ parallels_sdk_file }}'
+
+    - name: Install Parallels SDK
+      command: installer -pkg '/Volumes/Parallels Virtualization SDK/Parallels Virtualization SDK.pkg' -target /
+      become: yes
+
+  always:
+    - name: Detach Parallels SDK installer volume
+      command: hdiutil detach '/Volumes/Parallels Virtualization SDK'

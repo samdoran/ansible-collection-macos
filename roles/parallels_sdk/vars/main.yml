@@ -1,0 +1,6 @@
+_parallels_app_major_version: '{{ parallels_app_version.split(".")[0] }}'
+_parallels_app_version_number: '{{ parallels_app_version.split("-")[1] }}'
+_parallels_base_url: https://download.parallels.com/desktop/v{{ _parallels_app_major_version }}/{{ parallels_app_version }}
+_parallels_app_filename: ParallelsDesktop-{{ parallels_app_version }}.dmg
+_parallels_app_url: '{{ _parallels_base_url }}/{{ _parallels_app_filename }}'
+_parallels_app_file: '{{ parallels_install_cache }}/{{ _parallels_app_filename }}'

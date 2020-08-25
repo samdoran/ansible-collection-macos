@@ -1,0 +1,21 @@
+galaxy_info:
+  role_name: parallels_sdk
+  author:
+    - Sam Doran
+    - Matt Clay
+  description: Install Parallels SDK
+  company: ~
+  license: Apache 2.0
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: macOS
+      versions:
+        - any
+
+  galaxy_tags:
+    - system
+    - virtualization
+    - macos
+
+dependencies: []
