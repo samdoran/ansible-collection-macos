@@ -30,9 +30,10 @@
 # 4C6364ACXT|com.parallels.kext.hypervisor|1|Parallels International GmbH|1
 # 4C6364ACXT|com.parallels.kext.usbconnect|1|Parallels International GmbH|1
 #
-- name: Check if Paralles kernel extensios are approved
+- name: Check if Paralles kernel extensions are approved
   command: sqlite3 /var/db/SystemPolicyConfiguration/KextPolicy 'SELECT COUNT(*) from kext_policy WHERE team_id = "4C6364ACXT";'
   register: kernel_extension_policy
+  changed_when: no
   tags:
     - parallels
     - parallels_check
