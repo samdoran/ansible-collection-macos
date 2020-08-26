@@ -11,6 +11,7 @@
   get_url:
     url: "{{ _macos_python_pkg_url }}"
     dest: "{{ macos_python_tmp_path }}"
+    mode: '0644'
   register: download
   notify: cleanup temp files
   tags:
