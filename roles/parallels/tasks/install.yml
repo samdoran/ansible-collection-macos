@@ -135,7 +135,6 @@
   become: yes
   become_user: root
   register: parallels_install
-  notify: remove cache directory
 
 - name: Fix permissions changed during Parallels app install
   file:
