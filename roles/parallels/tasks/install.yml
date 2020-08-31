@@ -103,12 +103,6 @@
     regexp: '^#* *license_key=".*"$'
     replace: 'license_key="{{ parallels_license_key }}"'
 
-- name: Enable start-as-service in Parallels auto-deploy package
-  replace:
-    path: '{{ autodeploy_config }}'
-    regexp: '^#* *start_pd_as_service="yes"$'
-    replace: 'start_pd_as_service="yes"'
-
 - name: Disable auto-check for updates in Parallels auto-deploy package
   replace:
     path: '{{ autodeploy_config }}'
@@ -135,6 +129,8 @@
   become: yes
   become_user: root
   register: parallels_install
+  until: parallels_install is success
+  retries: 10
 
 - name: Fix permissions changed during Parallels app install
   file:
