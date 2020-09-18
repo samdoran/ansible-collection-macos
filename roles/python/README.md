@@ -24,7 +24,8 @@ Example Playbook
 
     - hosts: macs
       roles:
-         - samdoran.macos.python
+        - samdoran.macos.command_line_tools
+        - samdoran.macos.python
 
 
 License
