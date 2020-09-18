@@ -63,17 +63,61 @@ def get_sdk_version():
     return to_native(sdk_version)
 
 
-def main():
-    module = AnsibleModule(
-        argument_spec={},
-        supports_check_mode=True,
-    )
-
+def get_server_info(module, data):
     prlsrvctl_bin = None
     try:
         prlsrvctl_bin = get_bin_path('prlsrvctl', ['/usr/local/bin/'])
     except ValueError:
         pass
+
+    if prlsrvctl_bin is not None:
+        command = [prlsrvctl_bin, 'info', '--json']
+        rc, out, err = module.run_command(command)
+        if rc != 0:
+            module.warn('Failed to gather Parallels facts')
+
+        else:
+            srv_info = json.loads(out)
+
+            # 'Version': 'Desktop 16.0.0-48916',
+            version_string = srv_info['Version']
+            edition, full_version = version_string.split(' ', 1)
+            data['Version'] = {}
+            data['Version']['Edition'] = edition
+            data['Version']['Full'] = full_version
+            data['Version']['Major'] = full_version.split('.')[0]
+            data['Version']['MajorMinor'] = full_version.split('-')[0]
+            data['Version']['Release'] = full_version.split('-')[1]
+
+
+def get_vm_info(module, data):
+    prlctl_bin = None
+    try:
+        prlctl_bin = get_bin_path('prlctl', ['/usr/local/bin'])
+    except ValueError:
+        pass
+
+    if prlctl_bin is not None:
+        command = [prlctl_bin, 'list', '--full', '--all', '--json']
+        rc, out, err = module.run_command(command)
+        if rc != 0:
+            module.warn('Failed to gather Parallels virtual machine facts')
+
+        else:
+            vm_info = json.loads(out)
+
+            for vm in vm_info:
+                data['VMs'][vm['name']] = {}
+                for k in vm.keys():
+                    if k != 'name':
+                        data['VMs'][vm['name']][k] = vm[k]
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec={},
+        supports_check_mode=True,
+    )
 
     results = {'ansible_facts': {}}
     parallels_data = {
@@ -83,26 +127,12 @@ def main():
             'Major': '',
             'MajorMinor': '',
             'Release': '',
-        }
+        },
+        'VMs': {},
     }
-    if prlsrvctl_bin is not None:
-        command = [prlsrvctl_bin, 'info', '--json']
-        rc, out, err = module.run_command(command)
-        if rc != 0:
-            module.warn('Failed to gather Parallels facts')
 
-        else:
-            parallels_data = json.loads(out)
-
-            # 'Version': 'Desktop 16.0.0-48916',
-            version_string = parallels_data['Version']
-            edition, full_version = version_string.split(' ', 1)
-            parallels_data['Version'] = {}
-            parallels_data['Version']['Edition'] = edition
-            parallels_data['Version']['Full'] = full_version
-            parallels_data['Version']['Major'] = full_version.split('.')[0]
-            parallels_data['Version']['MajorMinor'] = full_version.split('-')[0]
-            parallels_data['Version']['Release'] = full_version.split('-')[1]
+    get_server_info(module, parallels_data)
+    get_vm_info(module, parallels_data)
 
     parallels_data['sdk_version'] = get_sdk_version()
     results['ansible_facts']['parallels'] = parallels_data
