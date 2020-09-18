@@ -4,3 +4,5 @@ macos_python_libyaml_version: '0.2.5'
 macos_python_cleanup_temp_files: yes
 macos_python_compile_libyaml: yes
 macos_python_tmp_path: /var/tmp/macos_python
+macos_python_pip_extra_args:
+  - --user

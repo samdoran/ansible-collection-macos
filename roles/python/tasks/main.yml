@@ -57,7 +57,7 @@
 - name: Install Python packages
   pip:
     executable: /usr/local/bin/pip3
-    extra_args: --user
+    extra_args: "{{ macos_python_pip_extra_args }}"
     name: "{{ macos_python_packages }}"
   become: no
   environment:

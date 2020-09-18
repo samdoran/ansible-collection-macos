@@ -17,6 +17,7 @@ Role Variables
 | `macos_python_compile_libyaml` | `yes` | Whether or not to compile `libyaml`. This will speed up PyYAML. |
 | `macos_python_libyaml_version` | `0.2.5` | Version of `libyaml` to download and compile. |
 | `macos_python_cleanup_temp_files` | `yes` | Whether or not to remove installation files such as the Python installer and `libyaml` source code. |
+| `macos_python_pip_extra_args` | `['--user']` | List of extra arguments passed to `pip`. |
 
 Example Playbook
 ----------------
