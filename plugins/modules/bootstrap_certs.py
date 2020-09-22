@@ -68,7 +68,8 @@ def write_file(module, path, certs):
             'secontext': None,
             'attributes': None,
         }
-        changed = module.set_fs_attributes_if_different(file_args, changed)
+        module.set_fs_attributes_if_different(file_args, changed)
+        changed = True
 
     return changed
 
