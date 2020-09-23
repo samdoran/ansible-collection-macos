@@ -79,6 +79,9 @@ def get_server_info(module, data):
         else:
             srv_info = json.loads(out)
 
+            for k in srv_info:
+                data[k] = srv_info[k]
+
             # 'Version': 'Desktop 16.0.0-48916',
             version_string = srv_info['Version']
             edition, full_version = version_string.split(' ', 1)
