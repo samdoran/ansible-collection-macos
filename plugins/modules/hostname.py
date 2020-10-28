@@ -30,12 +30,14 @@ options:
             - Name of the host
             - If the value is a fully qualified domain name that does not resolve from the given host,
               this will cause the module to hang for a few seconds while waiting for the name resolution attempt to timeout.
+        type: str
         required: true
     use:
         description:
             - Which strategy to use to update the hostname.
             - If not set we try to autodetect, but this can be problematic, particularly with containers as they can present misleading information.
         choices: ['alpine', 'debian', 'freebsd', 'generic', 'macos', 'macosx', 'darwin', 'openbsd', 'openrc', 'redhat', 'sles', 'solaris', 'systemd']
+        type: str
         version_added: '2.9'
 '''
 
@@ -681,9 +683,11 @@ class DarwinStrategy(GenericStrategy):
 
     def set_permanent_hostname(self, name):
         for hostname_type in self.name_types:
+            cmd = [self.scutil, '--set', hostname_type]
             if hostname_type == 'LocalHostName':
-                name = self.scrubbed_name
-            cmd = [self.scutil, '--set', hostname_type, to_native(name)]
+                cmd.append(to_native(self.scrubbed_name))
+            else:
+                cmd.append(to_native(name))
             rc, out, err = self.module.run_command(cmd)
             if rc != 0:
                 self.module.fail_json(msg="Failed to set {3} to '{2}': {0} {1}".format(to_native(out), to_native(err), to_native(name), hostname_type))
@@ -697,10 +701,14 @@ class DarwinStrategy(GenericStrategy):
     def update_permanent_hostname(self):
         name = self.module.params['name']
 
-        # Ensure all three names were updated
-        all_names = tuple((self.module.run_command([self.scutil, '--get', name_type])[1].strip() for name_type in self.name_types))
+        # Get all the current host name values in the order of self.name_types
+        all_names = tuple(self.module.run_command([self.scutil, '--get', name_type])[1].strip() for name_type in self.name_types)
 
-        if all_names != (name, name, self.scrubbed_name):
+        # Get the expected host name values based on the order in self.name_types
+        expected_names = tuple(self.scrubbed_name if n == 'LocalHostName' else name for n in self.name_types)
+
+        # Ensure all three names are updated
+        if all_names != expected_names:
             if not self.module.check_mode:
                 self.set_permanent_hostname(name)
             self.changed = True
@@ -957,6 +965,12 @@ class DarwinHostname(Hostname):
 class OsmcHostname(Hostname):
     platform = 'Linux'
     distribution = 'Osmc'
+    strategy_class = SystemdStrategy
+
+
+class PardusHostname(Hostname):
+    platform = 'Linux'
+    distribution = 'Pardus'
     strategy_class = SystemdStrategy
 
 
