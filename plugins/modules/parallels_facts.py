@@ -11,15 +11,12 @@ DOCUMENTATION = """
 ---
 module: parallels_facts
 author:
-    - Sam Doran (@samdoran)
+  - Sam Doran (@samdoran)
 version_added: '2.11'
 short_description: Gather information about Parallels using the C(prlsrvctl) command
 notes: []
 description:
-    - Gather information about Parallels using the C(prlsrvctl) command.
-options:
-    opt1:
-        description: []
+  - Gather information about Parallels using the C(prlsrvctl) command.
 """
 
 EXAMPLES = """
@@ -30,12 +27,55 @@ EXAMPLES = """
 RETURN = """
 ansible_facts:
   description: Facts to add to ansible_facts
-    returned: always
-    type: complex
-    contains:
-      parallels:
-        description:
-          - Stuff
+  returned: always
+  type: complex
+  contains:
+    parallels:
+      description: Data returned from C(prlsrvctl info). Not all values are documented.
+      Hardware info:
+        description: Hardware devices
+        type: list
+        elements: dict
+      Hostname:
+        description: Parallels host name
+        type: str
+      ID:
+        description: Parallels host ID
+        type: str
+      License:
+        description: Parallels license information
+        type: dict
+        contains:
+          key:
+            description: License key
+            type: str
+            sample: A8GZ1H-******-******-******-7N2HQG
+      OS:
+        description: Operating system version
+        type: str
+        sample: Mac OS X 10.15.6(19G2021)
+      VMs:
+        description: List of VMs registered to Parallels
+        type: complex
+        sample:
+          windows-2016:
+            ip_configured: 10.111.77.22
+            status: running
+            uuid: c9eb5191-c85e-4758-bfe7-a983c79af343
+          macOS-10.15:
+            ip_configured: '-'
+            status: stopped
+            uuid: e711eb50-1c80-43ef-9f74-86f7a0a6f387
+      Version:
+        description: Parallels version information
+        type: dict
+        sample:
+          Edition: Desktop
+          Full: 16.0.0-48916
+          Major: '16'
+          MajorMinor: 16.0.0
+          Release: '48916'
+
 """
 
 import json
