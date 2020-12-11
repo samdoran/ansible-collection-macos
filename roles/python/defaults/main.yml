@@ -1,4 +1,4 @@
-macos_python_version: '3.8.5'
+macos_python_version: '3.8.6'
 macos_python_packages: []
 macos_python_libyaml_version: '0.2.5'
 macos_python_cleanup_temp_files: yes
