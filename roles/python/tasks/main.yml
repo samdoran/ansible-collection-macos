@@ -1,3 +1,11 @@
+- name: Ensure Python version is valid
+  assert:
+    msg: "Invalid Python version given: {{ macos_python_version }}. Must be x.y.z and a valid Python version.."
+    that:
+      - macos_python_version is match('[23]\.[0-9]{1,2}\.[0-9]+')
+  tags:
+    - macos_python
+
 - name: Create temp path
   file:
     path: "{{ macos_python_tmp_path }}"
@@ -20,7 +28,7 @@
 - name: Install Python
   command: installer -pkg {{ download.dest }} -target /
   args:
-    creates: /Library/Frameworks/Python.framework/Versions/3.8
+    creates: /Library/Frameworks/Python.framework/Versions/{{ macos_python_version[:3] }}
   tags:
     - macos_python
 
