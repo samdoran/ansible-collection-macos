@@ -13,6 +13,5 @@ Various roles and modules meant to be used on macOS.
 
 ## Modules ##
 
-- `samdoran.macos.hostname` - A fork of the Ansible `hostname` module that adds support for macOS.
 - `samdoran.macos.bootstrap_certs` - Generates a trusted root certificate authority store for use by the Python version that comes from Python.org using the certificate authorities found in the system keychain.
 - `samdoran.macos.parallels_facts` - Gathers various facts from Parallels running on the host.
