@@ -1,5 +1,5 @@
 - name: Get installed Parallels app info
-  parallels_facts:
+  samdoran.macos.parallels_facts:
   tags:
     - parallels
     - always
@@ -50,7 +50,7 @@
     - parallels_check
 
 - name: Update Parallels facts
-  parallels_facts:
+  samdoran.macos.parallels_facts:
   tags:
     - parallels
     - always

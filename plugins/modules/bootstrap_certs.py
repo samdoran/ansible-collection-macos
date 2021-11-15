@@ -20,7 +20,7 @@ DOCUMENTATION = """
 module:
 author:
     - Sam Doran (@samdoran)
-version_added: '2020-08-03'
+version_added_collection: '1.0.0'
 short_description: Bootstrap CA file using macOS system cerots
 notes: []
 description:

@@ -12,7 +12,7 @@ DOCUMENTATION = """
 module: parallels_facts
 author:
   - Sam Doran (@samdoran)
-version_added: '2.11'
+version_added_collection: '1.0.0'
 short_description: Gather information about Parallels using the C(prlsrvctl) command
 notes: []
 description:
@@ -21,7 +21,7 @@ description:
 
 EXAMPLES = """
 - name: Gather Parallels facts
-  parallels_facts:
+  samdoran.macos.parallels_facts:
 """
 
 RETURN = """

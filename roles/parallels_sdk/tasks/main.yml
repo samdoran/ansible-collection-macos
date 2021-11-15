@@ -1,5 +1,5 @@
 - name: Get Parallels facts
-  parallels_facts:
+  samdoran.macos.parallels_facts:
   tags:
     - parallels_sdk
     - always

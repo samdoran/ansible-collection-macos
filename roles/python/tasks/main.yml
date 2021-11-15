@@ -33,7 +33,7 @@
     - macos_python
 
 - name: Install system CA certificates for Python
-  bootstrap_certs:
+  samdoran.macos.bootstrap_certs:
   vars:
     ansible_python_interpreter: /usr/local/bin/python3
   tags:
