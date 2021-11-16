@@ -6,6 +6,29 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+DOCUMENTATION = """
+module: bootstrap_certs
+author:
+    - Sam Doran (@samdoran)
+version_added: '1.0.0'
+short_description: Bootstrap CA file using macOS system cerots
+notes: []
+description:
+    - Get valid CAs from macOS system keychain and use them to build a CA file for use by Python
+options:
+    keychains:
+      description: List of keychain files to get certificates from
+      type: list
+      elements: str
+      default: ['/System/Library/Keychains/SystemRootCertificates.keychain']
+"""
+
+EXAMPLES = """
+"""
+
+RETURN = """
+"""
+
 import os
 import re
 import ssl
@@ -14,25 +37,6 @@ import tempfile
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.process import get_bin_path
 from ansible.module_utils._text import to_bytes
-
-DOCUMENTATION = """
----
-module:
-author:
-    - Sam Doran (@samdoran)
-version_added_collection: '1.0.0'
-short_description: Bootstrap CA file using macOS system cerots
-notes: []
-description:
-    - Get valid CAs from macOS system keychain and use them to build a CA file for use by Python
-options: {}
-"""
-
-EXAMPLES = """
-"""
-
-RETURN = """
-"""
 
 
 def file_is_different(file, certs):
@@ -119,7 +123,12 @@ def main():
 
     module = AnsibleModule(
         argument_spec={
-            'keychains': {'type': 'list', 'default': ['/System/Library/Keychains/SystemRootCertificates.keychain']},
+            'keychains': {
+                'type': 'list',
+                'elements': 'str',
+                'no_log': False,
+                'default': ['/System/Library/Keychains/SystemRootCertificates.keychain'],
+            },
         },
         supports_check_mode=True,
     )

@@ -8,11 +8,10 @@ __metaclass__ = type
 
 
 DOCUMENTATION = """
----
 module: parallels_facts
 author:
   - Sam Doran (@samdoran)
-version_added_collection: '1.0.0'
+version_added: '1.0.0'
 short_description: Gather information about Parallels using the C(prlsrvctl) command
 notes: []
 description:
@@ -28,58 +27,60 @@ RETURN = """
 ansible_facts:
   description: Facts to add to ansible_facts
   returned: always
-  type: complex
+  type: dict
   contains:
     parallels:
+      type: dict
       description: Data returned from C(prlsrvctl info). Not all values are documented.
-      Hardware info:
-        description: Hardware devices
-        type: list
-        elements: dict
-      Hostname:
-        description: Parallels host name
-        type: str
-      ID:
-        description: Parallels host ID
-        type: str
-      License:
-        description: Parallels license information
-        type: dict
-        contains:
-          key:
-            description: License key
-            type: str
-            sample: A8GZ1H-******-******-******-7N2HQG
-      OS:
-        description: Operating system version
-        type: str
-        sample: Mac OS X 10.15.6(19G2021)
-      VMs:
-        description: List of VMs registered to Parallels
-        type: list
-        elements: dict
-        sample:
-          - name: windows-2016
-            ip_configured: 10.111.77.22
-            status: running
-            uuid: c9eb5191-c85e-4758-bfe7-a983c79af343
-          - name: macOS-10.15
-            ip_configured: '-'
-            status: stopped
-            uuid: e711eb50-1c80-43ef-9f74-86f7a0a6f387
-          - name: rhel-9
-            ip_configured: 10.72.22.3
-            status: running
-            uuid: 39a76fba-275e-4d54-8227-281e1346641e
-      Version:
-        description: Parallels version information
-        type: dict
-        sample:
-          Edition: Desktop
-          Full: 16.0.0-48916
-          Major: '16'
-          MajorMinor: 16.0.0
-          Release: '48916'
+      contains:
+        Hardware info:
+          description: Hardware devices
+          type: list
+          elements: dict
+        Hostname:
+          description: Parallels host name
+          type: str
+        ID:
+          description: Parallels host ID
+          type: str
+        License:
+          description: Parallels license information
+          type: dict
+          contains:
+            key:
+              description: License key
+              type: str
+              sample: A8GZ1H-******-******-******-7N2HQG
+        OS:
+          description: Operating system version
+          type: str
+          sample: Mac OS X 10.15.6(19G2021)
+        VMs:
+          description: List of VMs registered to Parallels
+          type: list
+          elements: dict
+          sample:
+            - name: windows-2016
+              ip_configured: 10.111.77.22
+              status: running
+              uuid: c9eb5191-c85e-4758-bfe7-a983c79af343
+            - name: macOS-10.15
+              ip_configured: '-'
+              status: stopped
+              uuid: e711eb50-1c80-43ef-9f74-86f7a0a6f387
+            - name: rhel-9
+              ip_configured: 10.72.22.3
+              status: running
+              uuid: 39a76fba-275e-4d54-8227-281e1346641e
+        Version:
+          description: Parallels version information
+          type: dict
+          sample:
+            Edition: Desktop
+            Full: 16.0.0-48916
+            Major: '16'
+            MajorMinor: 16.0.0
+            Release: '48916'
 
 """
 
