@@ -56,16 +56,21 @@ ansible_facts:
         sample: Mac OS X 10.15.6(19G2021)
       VMs:
         description: List of VMs registered to Parallels
-        type: complex
+        type: list
+        elements: dict
         sample:
-          windows-2016:
+          - name: windows-2016
             ip_configured: 10.111.77.22
             status: running
             uuid: c9eb5191-c85e-4758-bfe7-a983c79af343
-          macOS-10.15:
+          - name: macOS-10.15
             ip_configured: '-'
             status: stopped
             uuid: e711eb50-1c80-43ef-9f74-86f7a0a6f387
+          - name: rhel-9
+            ip_configured: 10.72.22.3
+            status: running
+            uuid: 39a76fba-275e-4d54-8227-281e1346641e
       Version:
         description: Parallels version information
         type: dict
@@ -147,13 +152,7 @@ def get_vm_info(module, data):
             module.warn('Failed to gather Parallels virtual machine facts')
 
         else:
-            vm_info = json.loads(out)
-
-            for vm in vm_info:
-                data['VMs'][vm['name']] = {}
-                for k in vm.keys():
-                    if k != 'name':
-                        data['VMs'][vm['name']][k] = vm[k]
+            data['VMs'] = json.loads(out)
 
 
 def main():
@@ -171,7 +170,7 @@ def main():
             'MajorMinor': '',
             'Release': '',
         },
-        'VMs': {},
+        'VMs': [],
     }
 
     get_server_info(module, parallels_data)
