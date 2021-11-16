@@ -153,6 +153,7 @@ def get_vm_info(module, data):
 
         else:
             data['VMs'] = json.loads(out)
+            data['running_vm_count'] = len([vm for vm in data['VMs'] if vm['status'] == 'running'])
 
 
 def main():
@@ -171,6 +172,7 @@ def main():
             'Release': '',
         },
         'VMs': [],
+        'running_vm_count': 0,
     }
 
     get_server_info(module, parallels_data)
