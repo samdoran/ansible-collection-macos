@@ -1,2 +1,3 @@
-_macos_python_pkg_url: https://www.python.org/ftp/python/{{ macos_python_version }}/python-{{ macos_python_version }}-macosx10.9.pkg
+_macos_python_suffix: macos{{ 'x10.9' if ansible_facts.distribution_major_version is version('11', '<=') else '11' }}
+_macos_python_pkg_url: https://www.python.org/ftp/python/{{ macos_python_version }}/python-{{ macos_python_version }}-{{ _macos_python_suffix }}.pkg
 _macos_python_build_path: "{{ macos_python_tmp_path }}/build"
