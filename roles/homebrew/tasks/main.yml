@@ -34,7 +34,7 @@
     - packages
 
 - name: Install Homebrew taps
-  homebrew_tap:
+  community.general.homebrew_tap:
     tap: "{{ item }}"
     state: present
   loop: "{{ homebrew_taps | default([]) }}"
@@ -46,7 +46,7 @@
     - cask
 
 - name: Install Homebrew packages
-  homebrew:
+  community.general.homebrew:
     update_homebrew: yes
     name: "{{ item.name | default(item) }}"
     state: "{{ item.state | default('latest') }}"
@@ -60,8 +60,8 @@
     - packages
 
 - name: Install Homebrew Cask apps
-  homebrew_cask:
     name: "{{ item }}"
+  community.general.homebrew_cask:
     state: present
   loop: "{{ homebrew_cask_apps }}"
   ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
