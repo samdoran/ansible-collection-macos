@@ -3,13 +3,8 @@ homebrew_tmp_path: /var/tmp/homebrew
 
 homebrew_taps: []
 
-# You may specify 'install_options' and 'state' that will be passed
-# to the homebrew module. If you specify either of these options,
-# you must specify the 'name' field as well:
-# - name: rbenv
-#   state: HEAD
-#   options: 'some options here'
-#
 homebrew_packages: []
+
+homebrew_packages_options: []
 
 homebrew_cask_apps: []

@@ -48,11 +48,23 @@
 - name: Install Homebrew packages
   community.general.homebrew:
     update_homebrew: yes
+    name: "{{ homebrew_packages }}"
+    state: "{{ item.state | default('latest') }}"
+  become: no
+  ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
+  tags:
+    - macos
+    - homebrew
+    - packages
+
+- name: Install Homebrew packages with options
+  community.general.homebrew:
+    update_homebrew: yes
     name: "{{ item.name | default(item) }}"
     state: "{{ item.state | default('latest') }}"
     install_options: "{{ item.install_options | default(omit) }}"
   become: no
-  loop: "{{ homebrew_packages }}"
+  loop: "{{ homebrew_packages_options }}"
   ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
   tags:
     - macos
@@ -60,10 +72,9 @@
     - packages
 
 - name: Install Homebrew Cask apps
-    name: "{{ item }}"
   community.general.homebrew_cask:
+    name: "{{ homebrew_cask_apps }}"
     state: present
-  loop: "{{ homebrew_cask_apps }}"
   ignore_errors: yes  # Many packages are unreliable, so keep going even if a package fails to install
   become: no
   tags:
