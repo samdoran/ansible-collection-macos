@@ -2,7 +2,7 @@
   file:
     path: "{{ homebrew_tmp_path }}"
     state: directory
-    owner: "{{ ansible_user }}"
+    owner: "{{ ansible_user | default(lookup('env', 'USER')) }}"
     mode: '0755'
   tags:
     - macos
@@ -24,7 +24,7 @@
 - name: Install Homebrew
   command: "{{ homebrew_tmp_path }}/install.sh"
   args:
-    creates: /usr/local/bin/brew
+    creates: "{{ _homebrew_prefix[ansible_facts['architecture']] ~ '/bin/brew' }}"
   environment:
     NONINTERACTIVE: "1"
   become: no
