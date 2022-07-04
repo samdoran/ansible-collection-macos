@@ -33,7 +33,7 @@
       args:
         creates: /Library/Developer/CommandLineTools
       vars:
-        package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) }}"
+        package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) | trim }}"
       tags:
         - macos_command_line_tools
         - macos
