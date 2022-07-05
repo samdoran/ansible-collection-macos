@@ -1,7 +1,7 @@
 Python for macOS from Python.org
 ================================
 
-Install Python for macOS using the official installer from [Python.org](https://www.python.org/downloads/release/latest). Optionall download and
+Install Python for macOS using the official installer from [Python.org](https://www.python.org/downloads/release/latest).
 
 Requirements
 ------------
