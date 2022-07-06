@@ -1,11 +1,45 @@
-- name: Install Xcode Command Line Tools
-  raw: |-
-    if [[ ! -d /Library/Developer/CommandLineToools ]]; then
-        echo "Installing Xcode command line tools"
-        TMP_FILE=/private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-        touch "$TMP_FILE"
-        PACKAGE_NAME=$(sudo softwareupdate -l | grep -o 'Command Line Tools for Xcode-.*' | tail -n 1)
-        sudo softwareupdate --install "$PACKAGE_NAME"
-        rm -f "$TMP_FILE"
-    fi
+- name: Check for Xcode Command Line Tools
+  raw: stat /Library/Developer/CommandLineTools
+  register: xcode_cl_tools
+  changed_when: no
+  failed_when: xcode_cl_tools.rc not in [0, 1]
+  tags:
+    - macos_command_line_tools
+    - macos
+    - xcode
 
+- name: Install command line tools
+  when: xcode_cl_tools.stderr is search("No such file or directory")
+  block:
+    - name: Create hidden install file
+      raw: touch /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+    - name: List updates
+      raw: softwareupdate -l | grep -o 'Command Line Tools for Xcode-.*' | tail -n 1
+      register: updates
+      changed_when: no
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+    - name: Install Xcode Command Line Tools
+      raw: softwareupdate --install "{{ package_name }}"
+      vars:
+        package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) | trim }}"
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
+
+  always:
+    - name: Remove hidden install file
+      raw: rm -rf /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+      tags:
+        - macos_command_line_tools
+        - macos
+        - xcode
