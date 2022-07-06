@@ -12,7 +12,7 @@
   when: xcode_cl_tools.stderr is search("No such file or directory")
   block:
     - name: Create hidden install file
-      raw: touch /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+      raw: touch {{ _macos_cli_inprogress_file }}
       tags:
         - macos_command_line_tools
         - macos
@@ -38,7 +38,7 @@
 
   always:
     - name: Remove hidden install file
-      raw: rm -rf /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+      raw: rm -rf {{ _macos_cli_inprogress_file }}
       tags:
         - macos_command_line_tools
         - macos
