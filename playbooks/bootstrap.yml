@@ -1,5 +1,5 @@
-- name: Install Python on macOS
-  hosts: "{{ macos_hosts | default('all') }}"
+- name: Install Xcode Command Lines Tools and system Python on macOS
+  hosts: "{{ macos_12_plus_hosts | default('all') }}"
   gather_facts: no
   become: yes
 
