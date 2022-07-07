@@ -1,5 +1,5 @@
 - name: Check for Xcode Command Line Tools
-  raw: stat /Library/Developer/CommandLineTools
+  raw: stat {{ _macos_cli_tools_dir | quote }}
   register: xcode_cl_tools
   changed_when: no
   failed_when: xcode_cl_tools.rc not in [0, 1]
@@ -12,7 +12,7 @@
   when: xcode_cl_tools.stderr is search("No such file or directory")
   block:
     - name: Create hidden install file
-      raw: touch {{ _macos_cli_inprogress_file }}
+      raw: touch {{ _macos_cli_inprogress_file | quote }}
       tags:
         - macos_command_line_tools
         - macos
@@ -28,7 +28,7 @@
         - xcode
 
     - name: Install Xcode Command Line Tools
-      raw: softwareupdate --install "{{ package_name }}"
+      raw: softwareupdate --install {{ package_name | quote }}
       vars:
         package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) | trim }}"
       tags:
@@ -38,7 +38,7 @@
 
   always:
     - name: Remove hidden install file
-      raw: rm -rf {{ _macos_cli_inprogress_file }}
+      raw: rm -fv {{ _macos_cli_inprogress_file | quote }}
       tags:
         - macos_command_line_tools
         - macos
