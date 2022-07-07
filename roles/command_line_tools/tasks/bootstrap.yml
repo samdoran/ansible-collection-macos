@@ -43,3 +43,13 @@
         - macos_command_line_tools
         - macos
         - xcode
+
+- name: Test default Python
+  gather_facts:
+    gather_subset: '!all'
+  vars:
+    ansible_python_interpreter: "{{ macos_cli_python_interpreter }}"
+  tags:
+    - macos_command_line_tools
+    - macos
+    - xcode
