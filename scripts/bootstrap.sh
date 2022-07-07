@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 if [[ ! -d /Library/Developer/CommandLineTools ]]; then
     echo "Installing Xcode command line tools"
