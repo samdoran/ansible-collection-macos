@@ -8,6 +8,6 @@ if [[ ! -d /Library/Developer/CommandLineTools ]]; then
     touch "$TMP_FILE"
     PACKAGE_NAME=$(sudo softwareupdate -l | grep -o 'Command Line Tools for Xcode-.*' | tail -n 1)
     sudo softwareupdate --install "$PACKAGE_NAME"
-    rm -f "$TMP_FILE"
+    rm -fv "$TMP_FILE"
 fi
 
