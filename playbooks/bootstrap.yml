@@ -1,0 +1,9 @@
+- name: Install Xcode Command Lines Tools and system Python on macOS
+  hosts: "{{ macos_12_plus_hosts | default('all') }}"
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - import_role:
+        name: samdoran.macos.command_line_tools
+        tasks_from: bootstrap.yml

@@ -1,26 +1,25 @@
 - name: Check for Xcode Command Line Tools
-  stat:
-    path: "{{ _macos_cli_tools_dir }}"
+  raw: stat {{ _macos_cli_tools_dir | quote }}
   register: xcode_cl_tools
+  changed_when: no
+  failed_when: xcode_cl_tools.rc not in [0, 1]
   tags:
     - macos_command_line_tools
     - macos
     - xcode
 
 - name: Install command line tools
-  when: not xcode_cl_tools.stat.exists
+  when: xcode_cl_tools.stderr is search("No such file or directory")
   block:
     - name: Create hidden install file
-      file:
-        path: /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-        state: touch
+      raw: touch {{ _macos_cli_inprogress_file | quote }}
       tags:
         - macos_command_line_tools
         - macos
         - xcode
 
     - name: List updates
-      command: softwareupdate -l
+      raw: softwareupdate -l | grep -o 'Command Line Tools for Xcode-.*' | tail -n 1
       register: updates
       changed_when: no
       tags:
@@ -29,9 +28,7 @@
         - xcode
 
     - name: Install Xcode Command Line Tools
-      command: softwareupdate --install "{{ package_name }}"
-      args:
-        creates: "{{ _macos_cli_tools_dir }}"
+      raw: softwareupdate --install {{ package_name | quote }}
       vars:
         package_name: "{{ updates.stdout | regex_search('Command Line Tools for Xcode-.*', multiline=True) | trim }}"
       tags:
@@ -41,10 +38,18 @@
 
   always:
     - name: Remove hidden install file
-      file:
-        path: /private/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-        state: absent
+      raw: rm -fv {{ _macos_cli_inprogress_file | quote }}
       tags:
         - macos_command_line_tools
         - macos
         - xcode
+
+- name: Test default Python
+  gather_facts:
+    gather_subset: '!all'
+  vars:
+    ansible_python_interpreter: "{{ macos_cli_python_interpreter }}"
+  tags:
+    - macos_command_line_tools
+    - macos
+    - xcode
