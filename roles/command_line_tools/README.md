@@ -7,9 +7,9 @@ Since macOS >= 12.3 does not ship with Python, the `bootstrap.yml` playbook incl
 
     ansible-playbook -i inventory.yml samdoran.macos.bootstrap
 
-The playbook targets a group called `macos_12_plus_hosts`, falling back to `all`. This can be overridden using an extra var.
+The playbook targets a group called `macos_12_plus_hosts`. This can be overridden using an extra var.
 
-    ansible-playbook -i inventory.yml -e macos_12_plus_hosts=my_custom_group samdoran.macos.bootstrap
+    ansible-playbook -i inventory.yml -e target_hosts=my_custom_group samdoran.macos.bootstrap
 
 A standalone script for installing the command line tools is included in the `scripts/` directory for reference or running locally.
 

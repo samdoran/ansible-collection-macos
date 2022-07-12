@@ -1,5 +1,5 @@
 - name: Install Xcode Command Lines Tools and system Python on macOS
-  hosts: "{{ macos_12_plus_hosts | default('all') }}"
+  hosts: "{{ target_hosts | default('macos_12_plus_hosts') }}"
   gather_facts: no
   become: yes
 
