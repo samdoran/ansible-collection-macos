@@ -10,4 +10,3 @@ if [[ ! -d /Library/Developer/CommandLineTools ]]; then
     sudo softwareupdate --install "$PACKAGE_NAME"
     rm -fv "$TMP_FILE"
 fi
-

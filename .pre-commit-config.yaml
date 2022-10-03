@@ -1,0 +1,120 @@
+---
+
+ci:
+  autoupdate_schedule: quarterly
+  skip:
+  - stubtest
+
+repos:
+- repo: https://github.com/asottile/add-trailing-comma.git
+  rev: v2.3.0
+  hooks:
+  - id: add-trailing-comma
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks.git
+  rev: v1.3.1
+  hooks:
+  - id: remove-tabs
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks-markup.git
+  rev: v1.0.1
+  hooks:
+  - id: rst-linter
+    exclude: >-
+      (?x)
+      CHANGES.rst
+      |
+      docs/
+    files: >-
+      ^.*\.rst$
+
+- repo: https://github.com/pre-commit/pre-commit-hooks.git
+  rev: v4.3.0
+  hooks:
+  # Side-effects:
+  - id: trailing-whitespace
+  - id: check-merge-conflict
+  - id: double-quote-string-fixer
+  - id: end-of-file-fixer
+  - id: requirements-txt-fixer
+    exclude: >-
+      (?x)
+      ^
+        requirements/[^/]+.txt
+      $
+    files: >-
+      (?x)
+      ^
+        requirements/[^/]+.in
+      $
+
+  # Non-modifying checks:
+  - id: name-tests-test
+    args:
+    - --django
+    exclude: cheroot/test/(helper|webtest|_pytest_plugin).py
+    files: cheroot/test/.+\.py$
+  - id: check-added-large-files
+  - id: check-byte-order-marker
+  - id: check-case-conflict
+  # disabled due to pre-commit/pre-commit-hooks#159
+  # - id: check-docstring-first
+  - id: check-json
+  - id: check-symlinks
+  - id: check-yaml
+    args:
+    - --unsafe
+  - id: detect-private-key
+
+  # Heavy checks:
+  - id: check-ast
+  - id: debug-statements
+
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: v1.28.0
+  hooks:
+  - id: yamllint
+    types:
+    - file
+    - yaml
+    args:
+    - --strict
+
+- repo: https://github.com/PyCQA/flake8.git
+  rev: 5.0.4
+  hooks:
+  - id: flake8
+    alias: flake8-no-wps
+    name: flake8 WPS-excluded
+    additional_dependencies:
+    - flake8-2020 ~= 1.7.0
+    - flake8-length ~= 0.3.0
+    - flake8-logging-format ~= 0.7.5
+    - flake8-pytest-style ~= 1.6.0
+    - flake8-spellcheck ~= 0.28.0; python_version >= "3.8"
+    - flake8-spellcheck ~= 0.26.0; python_version < "3.8"
+    language_version: python3
+
+- repo: https://github.com/PyCQA/flake8.git
+  # NOTE: This is kept at v4 for until WPS starts supporting flake v5.
+  rev: 4.0.1  # enforce-version: 4.0.1
+  hooks:
+  - id: flake8
+    alias: flake8-only-wps
+    name: flake8 WPS-only
+    args:
+    - --select
+    - WPS
+    additional_dependencies:
+    - wemake-python-styleguide ~= 0.17.0
+    language_version: python3
+
+- repo: https://github.com/PyCQA/pylint.git
+  rev: v2.15.3
+  hooks:
+  - id: pylint
+    additional_dependencies:
+    - ansible-core ~= 2.14.0b1
+    - pylint-pytest < 1.1.0
+
+...
