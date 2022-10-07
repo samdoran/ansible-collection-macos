@@ -96,9 +96,6 @@ def get_certs(module, keychains):
 def validate_certs(module, certs):
     valid_certs = []
 
-    # # Validate certs
-    # rc, out, err = module.run_command(command)
-
     try:
         openssl_bin = module.get_bin_path('openssl')
     except ValueError:
