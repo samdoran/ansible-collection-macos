@@ -11,6 +11,7 @@ module: bootstrap_certs
 author:
     - Sam Doran (@samdoran)
 version_added: '1.0.0'
+extends_documentation_fragment: [files, action_common_attributes]
 short_description: Bootstrap CA file using macOS system cerots
 notes: []
 description:
@@ -53,7 +54,7 @@ def file_is_different(file, certs):
     return True
 
 
-def write_file(module, path, certs):
+def write_file(module, path, certs, file_args):
     changed = False
 
     certs[:] = [i + '\n' for i in certs]
@@ -62,17 +63,11 @@ def write_file(module, path, certs):
         with os.fdopen(tmpfd, 'w') as fd:
             fd.writelines(certs)
 
+        tmp_file_args = file_args.copy()
+        tmp_file_args["path"] = path
+        module.set_fs_attributes_if_different(tmp_file_args, changed)
         module.atomic_move(tmpfile, path)
 
-        file_args = {
-            'path': path,
-            'owner': 'root',
-            'group': 'wheel',
-            'mode': 0o0644,
-            'secontext': None,
-            'attributes': None,
-        }
-        module.set_fs_attributes_if_different(file_args, changed)
         changed = True
 
     return changed
@@ -130,6 +125,7 @@ def main():
                 'default': ['/System/Library/Keychains/SystemRootCertificates.keychain'],
             },
         },
+        add_file_common_args=True,
         supports_check_mode=True,
     )
 
@@ -144,7 +140,8 @@ def main():
     valid_certs = validate_certs(module, certs)
 
     if file_is_different(openssl_cafile_path, valid_certs):
-        results['changed'] = write_file(module, openssl_cafile_path, valid_certs)
+        file_args = module.load_file_common_arguments(module.params, path=openssl_cafile_path)
+        results['changed'] = write_file(module, openssl_cafile_path, valid_certs, file_args)
 
     results['openssl_cafile'] = openssl_cafile_path
 
