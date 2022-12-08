@@ -19,6 +19,8 @@ description:
 attributes:
     check_mode:
         support: full
+    diff_mode:
+        support: none
 options:
     keychains:
       description: List of keychain files to get certificates from
