@@ -21,6 +21,8 @@ attributes:
         support: full
     diff_mode:
         support: none
+    platform:
+        platforms: macOS
 options:
     keychains:
       description: List of keychain files to get certificates from
