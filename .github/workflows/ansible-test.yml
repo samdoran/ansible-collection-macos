@@ -42,10 +42,10 @@ concurrency:
 
 jobs:
 
-###
-# Sanity tests (REQUIRED)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_sanity.html
+  ###
+  # Sanity tests (REQUIRED)
+  #
+  # https://docs.ansible.com/ansible/latest/dev_guide/testing_sanity.html
 
   sanity:
     name: Sanity (Ⓐ${{ matrix.ansible }})
@@ -60,14 +60,14 @@ jobs:
           # around creation of a new stable branch, this might cause a problem
           # that two different versions of ansible-test use the same sanity test
           # ignore.txt file.
-          - stable-2.9 # Only if your collection supports Ansible 2.9
-          - stable-2.10 # Only if your collection supports ansible-base 2.10
+          - stable-2.9  # Only if your collection supports Ansible 2.9
+          - stable-2.10  # Only if your collection supports ansible-base 2.10
           - stable-2.11
           - stable-2.12
           - stable-2.13
           - stable-2.14
-        # - devel
-        # - milestone
+          # - devel
+          # - milestone
     runs-on: ubuntu-latest
     steps:
       # Run sanity tests inside a Docker container.
@@ -84,10 +84,10 @@ jobs:
           #   ansible.netcommon
           #   ansible.utils
 
-###
-# Unit tests (OPTIONAL)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_units.html
+  ###
+  # Unit tests (OPTIONAL)
+  #
+  # https://docs.ansible.com/ansible/latest/dev_guide/testing_units.html
 
   units:
     if: false  # disabled
@@ -98,14 +98,14 @@ jobs:
       fail-fast: true
       matrix:
         ansible:
-          - stable-2.9 # Only if your collection supports Ansible 2.9
-          - stable-2.10 # Only if your collection supports ansible-base 2.10
+          - stable-2.9  # Only if your collection supports Ansible 2.9
+          - stable-2.10  # Only if your collection supports ansible-base 2.10
           - stable-2.11
           - stable-2.12
           - stable-2.13
           - stable-2.14
-        # - devel
-        # - milestone
+          # - devel
+          # - milestone
 
     steps:
       - name: >-
@@ -139,8 +139,8 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          - stable-2.9 # Only if your collection supports Ansible 2.9
-          - stable-2.10 # Only if your collection supports ansible-base 2.10
+          - stable-2.9  # Only if your collection supports Ansible 2.9
+          - stable-2.10  # Only if your collection supports ansible-base 2.10
           - stable-2.11
           - stable-2.12
           - stable-2.13
@@ -167,7 +167,7 @@ jobs:
             python: '3.10'
           - ansible: stable-2.11
             python: '3.10'
-            
+
 
     steps:
       - name: >-
@@ -186,9 +186,10 @@ jobs:
           test-deps: ansible.netcommon
 
 
-  check:  # This job does nothing and is only used for the branch protection
-          # or multi-stage CI jobs, like making sure that all tests pass before
-          # a publishing job is started.
+  check:
+    # This job does nothing and is only used for the branch protection
+    # or multi-stage CI jobs, like making sure that all tests pass before
+    # a publishing job is started.
     if: always()
 
     needs:
