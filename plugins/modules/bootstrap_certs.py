@@ -16,6 +16,13 @@ short_description: Bootstrap CA file using macOS system cerots
 notes: []
 description:
     - Get valid CAs from macOS system keychain and use them to build a CA file for use by Python
+attributes:
+    check_mode:
+        support: full
+    diff_mode:
+        support: none
+    platform:
+        platforms: macOS
 options:
     keychains:
       description: List of keychain files to get certificates from
