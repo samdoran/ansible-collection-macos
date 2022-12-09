@@ -71,7 +71,7 @@ def write_file(module, path, certs, file_args):
             fd.writelines(certs)
 
         tmp_file_args = file_args.copy()
-        tmp_file_args["path"] = path
+        tmp_file_args['path'] = path
         module.set_fs_attributes_if_different(tmp_file_args, changed)
         module.atomic_move(tmpfile, path)
 
