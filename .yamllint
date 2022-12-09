@@ -16,5 +16,6 @@ rules:
     - 'no'
     - 'true'
     - 'yes'
+    - 'on'  # Allow "on" key name in GHA CI/CD workflow definitions
 
 ...
