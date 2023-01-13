@@ -1,1 +1,3 @@
 scripts/bootstrap.sh shebang
+plugins/modules/parallels_desktop.py no-smart-quotes  # legit error sample
+plugins/module_utils/python_runtime_compat.py pylint:used-before-assignment

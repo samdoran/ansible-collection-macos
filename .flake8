@@ -63,6 +63,8 @@ extend-ignore =
   WPS347,  # Found vague import that may cause confusion: to_bytes
   WPS360,  # Found an unnecessary use of a raw string
   WPS362,  # Found assignment to a subscript slice
+  WPS400,  # Found wrong magic comment  # Needed for mypy typing
+  WPS402,  # Found `noqa` comments overuse
   WPS420,  # Found wrong keyword: pass
   WPS422,  # Found future import: absolute_import
   WPS433,  # Found nested import
@@ -72,6 +74,7 @@ extend-ignore =
   WPS504,  # Found negated condition
   WPS528,  # Found implicit `.items()` usage
   WPS531,  # Found simplifiable returning `if` condition in a function
+  WPS608,  # Found incorrect `super()` call: remove arguments  # py2 still needs this
 
 # https://wemake-python-stylegui.de/en/latest/pages/usage/formatter.html
 #format = wemake

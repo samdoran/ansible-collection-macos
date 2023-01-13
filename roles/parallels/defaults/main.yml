@@ -2,3 +2,5 @@ parallels_app_version: '16.0.0-48916'
 parallels_install_cache: '/var/tmp/ParallelsInstall'
 parallels_autodeploy_url: https://download.parallels.com/desktop/tools/pd-autodeploy.zip
 parallels_licence_key: ~
+parallels_max_termination_severity: murdered
+parallels_reboot_post_upgrade: yes

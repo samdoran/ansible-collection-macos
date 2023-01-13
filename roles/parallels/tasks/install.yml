@@ -124,112 +124,11 @@
     group: staff
     mode: '0644'
 
-- name: Figure out the currently running Parallels Desktop process ID
-  # NOTE: `community.general.pids` requires `psutil` plus is big. It's
-  # NOTE: not worth it to have it as a dependency just for this task.
-  command: >-
-    pgrep -x prl_client_app
-  failed_when: parallels_desktop_instance.rc not in [0, 1]
-  register: parallels_desktop_instance
-
-- name: Set the Parallels Desktop PID value
-  set_fact:
-    parallels_desktop_pid: >-
-      {%- if not parallels_desktop_instance.rc -%}
-        {{- parallels_desktop_instance.stdout | int -}}
-      {%- endif -%}
-
 - name: Ensure the Parallels Desktop app is not running
-  when: parallels_desktop_pid  # it was actually running before
   become: no
-  block:
-    # TODO: Instruct Parallels to stop or suspend the running VMs prior
-    # TODO: to stopping it. Invoking `prlctl stop` should do the trick.
-    # TODO: `--acpi` is probably a good idea for the first attempt and
-    # TODO: after the grace period, it could be retried with `--kill`.
-
-    - name: Kindly ask Parallels Desktop app to exit
-      # NOTE: This needs to run as `administrator` and not `root` because
-      # NOTE: when executed with `sudo`, the `osascript` executable errors
-      # NOTE: out, being unable to work with the `Parallels Desktop`
-      # NOTE: instance spawned under another user. At least, this is
-      # NOTE: happening under old macOS X, like v10.15.7.
-      #
-      # FIXME: Handle failures in this command: if Parallels Desktop started
-      # FIXME: showing the "Update available" window, it rejects attempts to
-      # FIXME: quit the program with a return code `1`. And the following
-      # FIXME: standard error output:
-      # FIXME:
-      # FIXME: 40:44: execution error: Parallels Desktop got an error:
-      # FIXME: User canceled. (-128)
-      # FIXME:
-      command: >-
-        osascript -e 'tell application "Parallels Desktop" to quit'
-
-    - name: >-
-        Give the currently running Parallels Desktop process 50s to
-        die gracefully
-      # NOTE: This emulates `Contents/Resources/postflight`'s waiting
-      # NOTE: behavior except for the higher check frequency for better
-      # NOTE: responsiveness.
-      command: >-
-        pgrep -x prl_client_app
-      register: parallels_desktop_instance
-      failed_when: parallels_desktop_instance.rc != 1
-      delay: 0.5
-      retries: 100
-      until: parallels_desktop_instance is not failed
-
-    - name: Figure out the currently running Parallels Desktop process ID
-      command: >-
-        pgrep -x prl_client_app
-      register: new_parallels_desktop_instance
-      failed_when: parallels_desktop_instance.rc != 1
-
-    - name: Terminate Parallels using a `kill` signal `TERM`
-      command: >-
-        kill -TERM '{{ parallels_desktop_pid }}'
-      when: not new_parallels_desktop_instance.rc  # it is still running
-
-    - name: >-
-        Give the currently running Parallels Desktop process another 50s to
-        die gracefully
-      command: >-
-        pgrep -x prl_client_app
-      register: parallels_desktop_instance
-      failed_when: parallels_desktop_instance.rc != 1
-      delay: 0.5
-      retries: 100
-      until: parallels_desktop_instance is not failed
-
-    - name: Figure out the currently running Parallels Desktop process ID
-      command: >-
-        pgrep -x prl_client_app
-      register: new_parallels_desktop_instance
-      failed_when: parallels_desktop_instance.rc not in [0, 1]
-
-    - name: Brutally kill Parallels with `SIGTERM` showing no mercy
-      command: >-
-        kill -KILL '{{ parallels_desktop_pid }}'
-      when: not new_parallels_desktop_instance.rc  # it is still running
-
-    - name: Figure out the currently running Parallels Desktop process ID
-      command: >-
-        pgrep -x prl_client_app
-      register: new_parallels_desktop_instance
-      failed_when: parallels_desktop_instance.rc not in [0, 1]
-
-    - name: >-
-        Fail if a new Parallels Desktop instance appeared in place of the
-        killed one
-      fail:
-        msg: >-
-          Something or somebody has restarted Parallels Desktop outside of
-          this update process. This mustn't be happening and should be fixed
-          before it is possible to resume.
-      when:
-        - new_parallels_desktop_instance.rc == 0
-        - new_parallels_desktop_instance.stdout | int != parallels_desktop_pid
+  parallels_desktop:
+    state: >-
+      {{ parallels_max_termination_severity }}
 
 - name: Install Parallels app using the auto-deploy package
   command: installer -pkg "{{ autodeploy_package }}" -target /
@@ -250,8 +149,20 @@
   tags:
     - parallels
 
+- name: Ensure the Parallels Desktop app is running
+  become: no
+  parallels_desktop:
+    state: started
+  when:
+    - parallels_install is changed
+    - not parallels_reboot_post_upgrade
+  tags:
+    - parallels
+
 - name: Reboot
   reboot:
-  when: parallels_install is changed
+  when:
+    - parallels_install is changed
+    - parallels_reboot_post_upgrade
   tags:
     - parallels
