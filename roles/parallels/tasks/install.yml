@@ -80,22 +80,35 @@
         group: staff
         mode: '0644'
 
-- name: Enumerate Parallels auto-deploy package files
-  find:
-    path: '{{ parallels_install_cache }}/pd-autodeploy/'
-    pattern: '*.pkg'
-    file_type: directory
-    recurse: yes
-  register: available_pkgs
+- name: Get Parallels version from `pd-autodeploy.zip`
+  shell:
+    cmd: >-
+      unzip -l '{{ parallels_install_cache }}/pd-autodeploy.zip'
+      'Parallels Desktop Business Edition mass deployment package v*'
+      | grep /$ | head -n1
+      | sed
+      's#^.*Parallels Desktop Business Edition mass deployment package
+      v\(.*\)/$#\1#g'
+    # NOTE: `unzip` is used to list the files, not to unpack the archive.
+    # NOTE: The `unarchive` module above is called conditionally so we
+    # NOTE: can't rely on the files it returns.
+    warn: no
+  register: parallels_desktop_autodeploy_installer_version
 
 - name: Find Parallels auto-deploy package
   set_fact:
-    autodeploy_package: '{{ available_pkgs.files | map(attribute="path") | first }}'
+    autodeploy_package: >-
+      {{
+        parallels_install_cache
+      }}/pd-autodeploy/Parallels Desktop Business Edition
+      mass deployment package v{{
+        parallels_desktop_autodeploy_installer_version.stdout.strip()
+      }}/Parallels Desktop Autodeploy.pkg
 
 - name: Define paths to Parallels auto-deploy package files
   set_fact:
     autodeploy_config: '{{ autodeploy_package }}/License Key and Configuration/deploy.cfg'
-    autodeploy_dmg: '{{ autodeploy_package }}/Parallels Desktop DMG/{{ _parallels_app_filename }}'
+    autodeploy_dmg_dir: '{{ autodeploy_package }}/Parallels Desktop DMG'
 
 - name: Set license key in Parallels auto-deploy package
   replace:
@@ -115,11 +128,33 @@
     regexp: '^#* *updates_auto_download=".*"$'
     replace: 'updates_auto_download="off"'
 
-- name: Copy the Parallels installer into the auto-deploy package
-  copy:
+- name: Enumerate pre-existing DMGs under the auto-deploy package
+  find:
+    file_type: file
+    paths: >-
+      {{ autodeploy_dmg_dir }}
+    patterns: ParallelsDesktop-*.dmg
+    recurse: no
+  register: parallels_installer_dmgs
+
+- name: Wipe old DMG symlinks from the auto-deploy package
+  file:
+    follow: no
+    path: >-
+      {{ found_file.path }}
+    state: absent
+  loop: >-
+    {{ parallels_installer_dmgs.files }}
+  loop_control:
+    loop_var: found_file
+  when:
+    - parallels_installer_dmgs.matched > 0
+
+- name: Symlink the Parallels installer DMG into the auto-deploy package
+  file:
+    state: link
     src: '{{ _parallels_app_file }}'
-    dest: '{{ autodeploy_dmg }}'
-    remote_src: yes
+    dest: '{{ autodeploy_dmg_dir }}/{{ _parallels_app_filename }}'
     owner: administrator
     group: staff
     mode: '0644'
