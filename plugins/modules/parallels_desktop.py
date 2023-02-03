@@ -24,7 +24,7 @@ DOCUMENTATION = """
 ---
 
 module: parallels_desktop
-version_added: 2.3.0
+version_added: 2.5.0
 
 author:
 - Sviatoslav Sydorenko (@webknjaz)
