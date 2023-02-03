@@ -17,6 +17,8 @@ Role Variables
 | `parallels_install_cache` |  `/var/tmp/ParallelsInstall` | Directory used to storing the Parallels installer. |
 | `parallels_autodeploy_url` |  `https://download.parallels.com/desktop/tools/pd-autodeploy.zip` | URL for downloading the Parallels autodeploy tool. |
 | `parallels_licence_key` |  `~` | Parallels license key. |
+| `parallels_max_termination_severity` |  `murdered` | One of `terminated`, `killed` or `murdered`. |
+| `parallels_reboot_post_upgrade` |  `yes` | Reboot the host if yes, restart Parallels otherwise. |
 
 
 Dependencies

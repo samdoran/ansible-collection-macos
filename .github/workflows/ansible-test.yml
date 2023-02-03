@@ -90,7 +90,6 @@ jobs:
   # https://docs.ansible.com/ansible/latest/dev_guide/testing_units.html
 
   units:
-    if: false  # disabled
     runs-on: ubuntu-latest
     name: Units (Ⓐ${{ matrix.ansible }})
     strategy:

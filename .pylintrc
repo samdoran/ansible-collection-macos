@@ -89,6 +89,19 @@ disable=
   unused-argument,
   unused-variable,
   wrong-import-position,
+  # Outside of `ansible-test`:
+  broad-except,
+  consider-using-f-string,
+  fixme,
+  import-error,
+  keyword-arg-before-vararg,
+  no-value-for-parameter,
+  raise-missing-from,
+  redefined-builtin,
+  relative-beyond-top-level,
+  super-with-arguments,
+  superfluous-parens,
+  used-before-assignment,
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

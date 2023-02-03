@@ -1,1 +1,4 @@
 scripts/bootstrap.sh shebang
+plugins/modules/parallels_desktop.py no-smart-quotes  # legit error sample
+plugins/modules/parallels_desktop.py compile-2.6!skip # no macOS w/ Python 2.6
+plugins/modules/parallels_desktop.py import-2.6!skip # no macOS w/ Python 2.6

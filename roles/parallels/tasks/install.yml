@@ -159,6 +159,12 @@
     group: staff
     mode: '0644'
 
+- name: Ensure the Parallels Desktop app is not running
+  become: no
+  parallels_desktop:
+    state: >-
+      {{ parallels_max_termination_severity }}
+
 - name: Install Parallels app using the auto-deploy package
   command: installer -pkg "{{ autodeploy_package }}" -target /
   become: yes
@@ -178,8 +184,20 @@
   tags:
     - parallels
 
+- name: Ensure the Parallels Desktop app is running
+  become: no
+  parallels_desktop:
+    state: started
+  when:
+    - parallels_install is changed
+    - not parallels_reboot_post_upgrade
+  tags:
+    - parallels
+
 - name: Reboot
   reboot:
-  when: parallels_install is changed
+  when:
+    - parallels_install is changed
+    - parallels_reboot_post_upgrade
   tags:
     - parallels
