@@ -18,6 +18,7 @@ Various roles and modules meant to be used on macOS.
 
 - `samdoran.macos.bootstrap_certs` - Generates a trusted root certificate authority store for use by the Python version that comes from Python.org using the certificate authorities found in the system keychain.
 - `samdoran.macos.parallels_facts` - Gathers various facts from Parallels running on the host.
+- `samdoran.macos.parallels_desktop` - Manage the state of Parallels Desktop.
 
 
 [🧪 GitHub Actions CI/CD workflow tests badge]:
