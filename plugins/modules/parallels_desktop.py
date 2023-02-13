@@ -353,7 +353,7 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
 
     def run_with_raise(
             self,  # noqa: WPS318
-            cmd,  # type: str | list[str]
+            cmd,  # type: str | list[str] | tuple[str]
     ):  # type: (...) -> dict[str, list | str | int]
         """Invoke given command checking for failure.
 
