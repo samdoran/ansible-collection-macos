@@ -591,11 +591,38 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
             self,  # noqa: WPS318
     ):  # type: () -> dict[str, bool | str]
         """Make sure the Parallels Desktop app is running."""
-        spawn_parallels_cmd = 'open', '-a', 'Parallels Desktop', '--hide'
-        # NOTE: This may error out with rc=1 and the following stderr:
-        # NOTE: "LSOpenURLsWithRole() failed for the application
-        # NOTE: /Applications/Parallels Desktop.app with error -610.\n"
-        self.run_with_raise(spawn_parallels_cmd)
+        try:
+            parallels_pid = self.get_parallels_pid()
+        except LookupError:
+            spawn_parallels_cmd = 'open', '-a', 'Parallels Desktop', '--hide'
+            # NOTE: This may error out with rc=1 and the following stderr:
+            # NOTE: "LSOpenURLsWithRole() failed for the application
+            # NOTE: /Applications/Parallels Desktop.app with error -610.\n"
+
+            self.run_with_raise(spawn_parallels_cmd)
+            parallels_pid = self.get_parallels_pid()
+
+            return {
+                'msg': 'The {app!s} app (process: `{proc!s}`; '
+                'PID: `{pid:d}`) has been started successfully.'.
+                format(
+                    app=PARALLELS_DESKTOP_APP_NAME,
+                    pid=parallels_pid,
+                    proc=PARALLELS_DESKTOP_PROCESS_NAME,
+                ),
+                'changed': True,
+            }
+
+        return {
+            'msg': 'The {app!s} app (process: `{proc!s}`; '
+            'PID: `{pid:d}`) is already running.'.
+            format(
+                app=PARALLELS_DESKTOP_APP_NAME,
+                pid=parallels_pid,
+                proc=PARALLELS_DESKTOP_PROCESS_NAME,
+            ),
+            'changed': False,
+        }
 
     def ensure_app_terminated(  # noqa: WPS231
             self,  # noqa: WPS318
