@@ -594,13 +594,15 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
         try:
             parallels_pid = self.get_parallels_pid()
         except LookupError:
+            parallels_pid = -1
             spawn_parallels_cmd = 'open', '-a', 'Parallels Desktop', '--hide'
             # NOTE: This may error out with rc=1 and the following stderr:
             # NOTE: "LSOpenURLsWithRole() failed for the application
             # NOTE: /Applications/Parallels Desktop.app with error -610.\n"
 
-            self.run_with_raise(spawn_parallels_cmd)
-            parallels_pid = self.get_parallels_pid()
+            if not self.check_mode:
+                self.run_with_raise(spawn_parallels_cmd)
+                parallels_pid = self.get_parallels_pid()
 
             return {
                 'msg': 'The {app!s} app (process: `{proc!s}`; '
