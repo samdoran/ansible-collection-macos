@@ -13,7 +13,7 @@ __metaclass__ = type
 import signal
 
 try:
-    import typing as t
+    import typing as t  # noqa: F401
 except ImportError:
     pass
 

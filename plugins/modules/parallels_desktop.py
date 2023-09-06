@@ -109,7 +109,7 @@ import traceback
 from functools import partial
 
 try:
-    import typing as t
+    import typing as t  # noqa: F401
 except ImportError:
     pass
 
