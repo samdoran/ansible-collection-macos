@@ -16,6 +16,7 @@
 
 name: CI
 on:
+  merge_group:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
   push:
     branches:
