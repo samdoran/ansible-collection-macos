@@ -32,49 +32,82 @@ extend-exclude =
 # Completely and unconditionally ignore the following errors:
 extend-ignore =
   # Legitimate cases, no need to "fix" these violations:
-  E501,  # "line too long", its function is replaced by `flake8-length`
-  W505,  # "doc line too long", its function is replaced by `flake8-length`
-  I,  # flake8-isort is drunk + we have isort integrated into pre-commit
-  WPS326,  # "Found implicit string concatenation" -- nothing bad about this
+  # E501: "line too long", its function is replaced by `flake8-length`
+  E501,
+  # W505: "doc line too long", its function is replaced by `flake8-length`
+  W505,
+  # I: flake8-isort is drunk + we have isort integrated into pre-commit
+  I,
+  # WPS326: "Found implicit string concatenation" -- nothing bad about this
+  WPS326,
 
   # FIXME: These stdlib errors need fixing and removal
-  E402,  # module level import not at top of file
+  # E402: module level import not at top of file
+  E402,
 
   # FIXME: These `flake8-logging-format` errors need fixing and removal
-  G010,  # Logging statement uses 'warn' instead of 'warning'
+  # G010: Logging statement uses 'warn' instead of 'warning'
+  G010,
 
   # FIXME: These `flake8-length` errors need fixing and removal
-  LN001,  # code line is too long
-  LN002,  # doc/comment line is too long
+  # LN001: code line is too long
+  LN001,
+  # LN002: doc/comment line is too long
+  LN002,
 
   # FIXME: These `flake8-annotations` errors need fixing and removal
-  SC100,  # Possibly misspelt word / comments
-  SC200,  # Possibly misspelt word / names
+  # SC100: Possibly misspelt word / comments
+  SC100,
+  # SC200: Possibly misspelt word / names
+  SC200,
 
   # FIXME: These `wemake-python-styleguide` errors need fixing and removal
-  WPS110,  # Found wrong variable name
-  WPS111,  # Found too short name
-  WPS204,  # Found overused expression
-  WPS210,  # Found too many local variables
-  WPS221,  # Found line with high Jones Complexity
-  WPS226,  # Found string literal over-use
-  WPS336,  # Found explicit string concatenation
-  WPS339,  # Found number with meaningless zeros
-  WPS347,  # Found vague import that may cause confusion: to_bytes
-  WPS360,  # Found an unnecessary use of a raw string
-  WPS362,  # Found assignment to a subscript slice
-  WPS400,  # Found wrong magic comment  # Needed for mypy typing
-  WPS402,  # Found `noqa` comments overuse
-  WPS420,  # Found wrong keyword: pass
-  WPS422,  # Found future import: absolute_import
-  WPS433,  # Found nested import
-  WPS436,  # Found protected module import: _text
-  WPS453,  # Found executable mismatch: shebang is present but the file is not executable
-  WPS463,  # Found a getter without a return value
-  WPS504,  # Found negated condition
-  WPS528,  # Found implicit `.items()` usage
-  WPS531,  # Found simplifiable returning `if` condition in a function
-  WPS608,  # Found incorrect `super()` call: remove arguments  # py2 still needs this
+  # WPS110: Found wrong variable name
+  WPS110,
+  # WPS111: Found too short name
+  WPS111
+  # WPS204: Found overused expression
+  WPS204
+  # WPS210: Found too many local variables
+  WPS210
+  # WPS221: Found line with high Jones Complexity
+  WPS221
+  # WPS226: Found string literal over-use
+  WPS226
+  # WPS336: Found explicit string concatenation
+  WPS336
+  # WPS339: Found number with meaningless zeros
+  WPS339
+  # WPS347: Found vague import that may cause confusion: to_bytes
+  WPS347
+  # WPS360: Found an unnecessary use of a raw string
+  WPS360
+  # WPS362: Found assignment to a subscript slice
+  WPS362
+  # WPS400: "Found wrong magic comment" -- needed for mypy typing
+  WPS400
+  # WPS402: Found `noqa` comments overuse
+  WPS402
+  # WPS420: Found wrong keyword: pass
+  WPS420
+  # WPS422: Found future import: absolute_import
+  WPS422
+  # WPS433: Found nested import
+  WPS433
+  # WPS436: Found protected module import: _text
+  WPS436
+  # WPS453: Found executable mismatch: shebang is present but the file is not executable
+  WPS453
+  # WPS463: Found a getter without a return value
+  WPS463
+  # WPS504: Found negated condition
+  WPS504
+  # WPS528: Found implicit `.items()` usage
+  WPS528
+  # WPS531: Found simplifiable returning `if` condition in a function
+  WPS531
+  # WPS608: "Found incorrect `super()` call: remove arguments" -- py2 still needs this
+  WPS608
 
 # https://wemake-python-stylegui.de/en/latest/pages/usage/formatter.html
 #format = wemake
