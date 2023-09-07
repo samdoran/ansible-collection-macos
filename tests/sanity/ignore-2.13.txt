@@ -1,6 +1,2 @@
 scripts/bootstrap.sh shebang
 plugins/modules/parallels_desktop.py no-smart-quotes  # legit error sample
-plugins/modules/parallels_desktop.py compile-2.7!skip  # no modern macOS w/ Python 2.7
-plugins/modules/parallels_desktop.py compile-3.5!skip  # no modern macOS w/ Python 2.7
-plugins/modules/parallels_desktop.py import-2.7!skip  # no modern macOS w/ Python 2.7
-plugins/modules/parallels_desktop.py import-3.5!skip  # no modern macOS w/ Python 2.7
