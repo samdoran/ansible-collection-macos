@@ -2,6 +2,9 @@
 
 ci:
   autoupdate_schedule: quarterly
+  skip:
+  - add-trailing-comma  # v3.0.0 only supports Python >=3.6
+  - flake8  # This is kept at v4 for until WPS starts supporting flake v5
 
 repos:
 - repo: https://github.com/asottile/add-trailing-comma.git
