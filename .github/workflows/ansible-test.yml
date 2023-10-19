@@ -111,15 +111,15 @@ jobs:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: units
 
-###
-# Integration tests (RECOMMENDED)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_integration.html
+  ###
+  # Integration tests (RECOMMENDED)
+  #
+  # https://docs.ansible.com/ansible/latest/dev_guide/testing_integration.html
 
 
-# If the application you are testing is available as a docker container and you want to test
-# multiple versions see the following for an example:
-# https://github.com/ansible-collections/community.zabbix/tree/master/.github/workflows
+  # If the application you are testing is available as a docker container and you want to test
+  # multiple versions see the following for an example:
+  # https://github.com/ansible-collections/community.zabbix/tree/master/.github/workflows
 
   integration:
     if: false  # disabled
