@@ -79,11 +79,6 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
-          # OPTIONAL If your sanity tests require code
-          # from other collections, install them like this
-          # test-deps: >-
-          #   ansible.netcommon
-          #   ansible.utils
 
   ###
   # Unit tests (OPTIONAL)
@@ -115,11 +110,6 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: units
-          # OPTIONAL If your unit tests require code
-          # from other collections, install them like this
-          test-deps: >-
-            ansible.netcommon
-            ansible.utils
 
 ###
 # Integration tests (RECOMMENDED)
@@ -177,13 +167,8 @@ jobs:
         uses: ansible-community/ansible-test-gh-action@release/v1
         with:
           ansible-core-version: ${{ matrix.ansible }}
-          # OPTIONAL command to run before invoking `ansible-test integration`
-          # pre-test-cmd:
           target-python-version: ${{ matrix.python }}
           testing-type: integration
-          # OPTIONAL If your integration tests require code
-          # from other collections, install them like this
-          test-deps: ansible.netcommon
 
 
   check:
