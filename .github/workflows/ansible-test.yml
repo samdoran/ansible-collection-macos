@@ -79,6 +79,7 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
+          git-checkout-ref: ${{ github.ref }}
 
   ###
   # Unit tests (OPTIONAL)
@@ -110,6 +111,7 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: units
+          git-checkout-ref: ${{ github.ref }}
 
   ###
   # Integration tests (RECOMMENDED)
@@ -169,6 +171,7 @@ jobs:
           ansible-core-version: ${{ matrix.ansible }}
           target-python-version: ${{ matrix.python }}
           testing-type: integration
+          git-checkout-ref: ${{ github.ref }}
 
 
   check:
