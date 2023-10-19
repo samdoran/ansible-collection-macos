@@ -92,7 +92,6 @@
     # NOTE: `unzip` is used to list the files, not to unpack the archive.
     # NOTE: The `unarchive` module above is called conditionally so we
     # NOTE: can't rely on the files it returns.
-    warn: no
   register: parallels_desktop_autodeploy_installer_version
 
 - name: Find Parallels auto-deploy package
