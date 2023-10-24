@@ -1,4 +1,4 @@
-[![Galaxy](https://img.shields.io/badge/galaxy-samdoran.macos-blue)](https://galaxy.ansible.com/samdoran/macos)
+[![Galaxy](https://img.shields.io/badge/galaxy-samdoran.macos-blue)](https://galaxy.ansible.com/ui/repo/published/samdoran/macos/)
 
 [![🧪 GitHub Actions CI/CD workflow tests badge]][GHA workflow runs list]
 [![pre-commit.ci status badge]][pre-commit.ci results page]
