@@ -111,11 +111,8 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v3.0.3
+  rev: v2.15.9  # enforce-version: v2.15.9
   hooks:
   - id: pylint
-    additional_dependencies:
-    - ansible-core ~= 2.14.0b1
-    - pylint-pytest < 1.1.0
 
 ...
