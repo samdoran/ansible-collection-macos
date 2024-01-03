@@ -46,7 +46,7 @@ except NameError:
                 self,  # noqa: WPS318
                 errno=_ETIMEDOUT,  # type: int
                 *args,  # type: list
-                **kwargs  # type: dict
+                **kwargs,  # type: dict
         ):  # type: (...) -> None
             """Initialize a timeout error instance."""
             super(TimeoutError, self).__init__(errno, *args, **kwargs)
