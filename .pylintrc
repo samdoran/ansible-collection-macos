@@ -598,5 +598,5 @@ preferred-modules=
 # Exceptions that will emit a warning when being caught. Defaults to
 # "BaseException, Exception".
 overgeneral-exceptions=
-  BaseException,
-  Exception,
+  builtins.BaseException,
+  builtins.Exception,

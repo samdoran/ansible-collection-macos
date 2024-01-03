@@ -651,22 +651,22 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
                 'msg': str(lookup_error),
                 'changed': False,
             }
-        else:
-            terminate_parallels = process_syscall_errors(
-                partial(os.kill, parallels_pid, signal.SIGTERM),
-            )
-            destroy_parallels = process_syscall_errors(
-                partial(os.kill, parallels_pid, signal.SIGKILL),
-            )
-            parallels_termination_stages = (
-                (
-                    'terminated',
-                    self.kindly_ask_parallels_desktop_app_to_quit,
-                    100,
-                ),
-                ('killed', terminate_parallels, 100),
-                ('murdered', destroy_parallels, 5),
-            )
+
+        terminate_parallels = process_syscall_errors(
+            partial(os.kill, parallels_pid, signal.SIGTERM),
+        )
+        destroy_parallels = process_syscall_errors(
+            partial(os.kill, parallels_pid, signal.SIGKILL),
+        )
+        parallels_termination_stages = (
+            (
+                'terminated',
+                self.kindly_ask_parallels_desktop_app_to_quit,
+                100,
+            ),
+            ('killed', terminate_parallels, 100),
+            ('murdered', destroy_parallels, 5),
+        )
 
         self.ensure_running_vms_stopped()
 

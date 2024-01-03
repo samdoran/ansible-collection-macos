@@ -5,6 +5,7 @@ ci:
   skip:
   - add-trailing-comma  # v3.0.0 only supports Python >=3.6
   - flake8  # This is kept at v4 for until WPS starts supporting flake v5
+  - pylint  # Getting exceptions running with pylint >=3
 
 repos:
 - repo: https://github.com/asottile/add-trailing-comma.git
@@ -13,7 +14,7 @@ repos:
   - id: add-trailing-comma
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks.git
-  rev: v1.5.1
+  rev: v1.5.4
   hooks:
   - id: remove-tabs
 
@@ -30,7 +31,7 @@ repos:
       ^.*\.rst$
 
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v4.4.0
+  rev: v4.5.0
   hooks:
   # Side-effects:
   - id: trailing-whitespace
@@ -72,7 +73,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.32.0
+  rev: v1.33.0
   hooks:
   - id: yamllint
     types:
@@ -82,7 +83,7 @@ repos:
     - --strict
 
 - repo: https://github.com/PyCQA/flake8.git
-  rev: 6.0.0
+  rev: 6.1.0
   hooks:
   - id: flake8
     alias: flake8-no-wps
@@ -114,8 +115,5 @@ repos:
   rev: v2.15.9
   hooks:
   - id: pylint
-    additional_dependencies:
-    - ansible-core ~= 2.14.0b1
-    - pylint-pytest < 1.1.0
 
 ...
