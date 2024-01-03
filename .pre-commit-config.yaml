@@ -5,10 +5,11 @@ ci:
   skip:
   - add-trailing-comma  # v3.0.0 only supports Python >=3.6
   - flake8  # This is kept at v4 for until WPS starts supporting flake v5
+  - pylint  # Getting exceptions running with pylint >=3
 
 repos:
 - repo: https://github.com/asottile/add-trailing-comma.git
-  rev: v3.1.0
+  rev: v2.5.1
   hooks:
   - id: add-trailing-comma
 
@@ -111,7 +112,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v2.15.9  # enforce-version: v2.15.9
+  rev: v2.15.9
   hooks:
   - id: pylint
 

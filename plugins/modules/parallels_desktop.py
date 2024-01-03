@@ -148,7 +148,7 @@ class ParallelsDesktopModuleError(RuntimeError):
             msg,  # type: str
             error_args,  # type: dict
             *args,  # type: list
-            **kwargs,  # type: dict
+            **kwargs  # type: dict
     ):  # type: (...) -> None
         """Initialize a Parallels Desktop error instance.
 
@@ -187,7 +187,7 @@ class CmdFailedError(ParallelsDesktopModuleError):
             msg,  # type: str
             error_args,  # type: dict
             *args,  # type: list
-            **kwargs,  # type: dict
+            **kwargs  # type: dict
     ):  # type: (...) -> None
         """Initialize a failed command error instance.
 
