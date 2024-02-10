@@ -52,9 +52,9 @@ except NameError:
             super(TimeoutError, self).__init__(errno, *args, **kwargs)
 
 
-def get_signal_name(signal_constant):
+def get_signal_name(signal_constant):  # type: (int | signal.Signals) -> str
     try:
-        return signal.Signals(signal).name  # Python 3
+        return signal.Signals(signal_constant).name  # Python 3
     except AttributeError:
         pass
 
