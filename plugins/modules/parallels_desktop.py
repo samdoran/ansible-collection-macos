@@ -700,6 +700,7 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
 
         raise ParallelsDesktopModuleError(
             changed=False,
+            error_args={},
             msg='Failed to terminate the {app!s} app '
             '(process: `{proc!s}`): {msg!s}'.
             format(
