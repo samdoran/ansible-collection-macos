@@ -106,7 +106,6 @@ import os
 import signal
 import time
 import traceback
-from functools import partial
 
 try:
     import typing as t  # noqa: F401
@@ -223,6 +222,8 @@ class CmdFailedError(ParallelsDesktopModuleError):
 
 def process_syscall_errors(
         kill_process,  # type: t.Callable[[int, signal.Signals], None]  # noqa: WPS318
+        pid,  # type: int  # noqa: WPS318
+        process_signal,  # type: signal.Signals
 ):  # type: (...) -> t.Callable[[int, signal.Signals], None]
     """Decorate process-killer function suppressing expected errors.
 
@@ -233,10 +234,7 @@ def process_syscall_errors(
     :raises CmdFailedError: On "Operation not permitted".
     """
 
-    def kill_process_wrapper(  # noqa: WPS430
-            pid,  # type: int  # noqa: WPS318
-            process_signal,  # type: signal.Signals
-    ):  # type: (...) -> None
+    def kill_process_wrapper():  # type: () -> None  # noqa: WPS430
         try:
             kill_process(pid, process_signal)
         except ANTICIPATED_KILL_FAILURES as proc_exc:
@@ -253,7 +251,7 @@ def process_syscall_errors(
             # >>> get_signal_name(process_signal)
             # 'SIGKILL'
             signal_name = get_signal_name(process_signal)
-            cmd = 'kill', '-{signal!s}'.format(signal=signal_name), pid
+            cmd = 'kill', '-{signal!s}'.format(signal=signal_name), str(pid)
             res = {
                 'cmd': cmd,
                 'rc': proc_exc.errno,
@@ -562,7 +560,7 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
         try:
             self.run_with_raise(osascript_cmd_exec_args)
         except CmdFailedError as cmd_err:
-            process_error_code = 1
+            process_error_code = errno.EPERM
 
             user_cancelled_error_msg = (  # Stuck on Update Available on start
                 '40:44: execution error: Parallels Desktop got an error: '
@@ -653,27 +651,37 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
             }
 
         terminate_parallels = process_syscall_errors(
-            partial(os.kill, parallels_pid, signal.SIGTERM),
+            os.kill, parallels_pid, signal.SIGTERM,
         )
         destroy_parallels = process_syscall_errors(
-            partial(os.kill, parallels_pid, signal.SIGKILL),
+            os.kill, parallels_pid, signal.SIGKILL,
         )
         parallels_termination_stages = (
             (
                 'terminated',
                 self.kindly_ask_parallels_desktop_app_to_quit,
                 100,
+                (errno.EPERM, ),
             ),
-            ('killed', terminate_parallels, 100),
-            ('murdered', destroy_parallels, 5),
+            ('killed', terminate_parallels, 100, (errno.EPERM, )),
+            ('murdered', destroy_parallels, 5, ()),
         )
 
         self.ensure_running_vms_stopped()
 
         killing_error_message = None
-        for stage, kill_parallels, wait_cycles in parallels_termination_stages:
+        for (
+            stage,
+            kill_parallels,
+            wait_cycles,
+            ignorrable_errors,
+        ) in parallels_termination_stages:
             if not self.check_mode:
-                kill_parallels()
+                try:
+                    kill_parallels()
+                except CmdFailedError as cmd_err:
+                    if cmd_err.error_args.get('rc') not in ignorrable_errors:
+                        raise
 
             try:
                 if not self.check_mode:
