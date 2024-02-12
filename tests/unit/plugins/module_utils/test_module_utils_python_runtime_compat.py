@@ -4,10 +4,12 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import errno
+import signal
 import sys
 
 import pytest
 
+from ansible_collections.samdoran.macos.plugins.module_utils.python_runtime_compat import get_signal_name
 from ansible_collections.samdoran.macos.plugins.module_utils.python_runtime_compat import shlex_join
 from ansible_collections.samdoran.macos.plugins.module_utils.python_runtime_compat import TimeoutError
 
@@ -45,3 +47,8 @@ def test_timeout_error_is_oserror():
 def test_timeout_error_errno():
     """Test :exc:`TimeoutError`'s ``errno`` property's ``ETIMEDOUT``."""
     assert TimeoutError().errno in (errno.ETIMEDOUT, None)  # noqa: WPS510
+
+
+def test_get_signal_name():  # type: () -> None
+    """Verify :py:func:`get_signal_name`'s advertised behavior."""
+    assert 'SIGSEGV' == get_signal_name(signal.SIGSEGV)
