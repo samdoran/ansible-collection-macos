@@ -70,7 +70,7 @@ jobs:
           - stable-2.15
           - stable-2.16
           - devel
-          
+
     runs-on: ubuntu-latest
     steps:
       # Run sanity tests inside a Docker container.
