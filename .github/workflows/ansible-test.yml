@@ -67,8 +67,10 @@ jobs:
           - stable-2.12
           - stable-2.13
           - stable-2.14
-          # - devel
-          # - milestone
+          - stable-2.15
+          - stable-2.16
+          - devel
+
     runs-on: ubuntu-latest
     steps:
       # Run sanity tests inside a Docker container.
@@ -100,8 +102,9 @@ jobs:
           - stable-2.12
           - stable-2.13
           - stable-2.14
-          # - devel
-          # - milestone
+          - stable-2.15
+          - stable-2.16
+          - devel
 
     steps:
       - name: >-
@@ -113,67 +116,6 @@ jobs:
           testing-type: units
           git-checkout-ref: ${{ github.ref }}
 
-  ###
-  # Integration tests (RECOMMENDED)
-  #
-  # https://docs.ansible.com/ansible/latest/dev_guide/testing_integration.html
-
-
-  # If the application you are testing is available as a docker container and you want to test
-  # multiple versions see the following for an example:
-  # https://github.com/ansible-collections/community.zabbix/tree/master/.github/workflows
-
-  integration:
-    if: false  # disabled
-    runs-on: ubuntu-latest
-    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
-    strategy:
-      fail-fast: false
-      matrix:
-        ansible:
-          - stable-2.9  # Only if your collection supports Ansible 2.9
-          - stable-2.10  # Only if your collection supports ansible-base 2.10
-          - stable-2.11
-          - stable-2.12
-          - stable-2.13
-          - stable-2.14
-        # - devel
-        # - milestone
-        python:
-          - '2.6'
-          - '2.7'
-          - '3.5'
-          - '3.6'
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
-        exclude:
-          # Because ansible-test doesn't support Python 3.9 for Ansible 2.9
-          # and Python 3.10 is supported in 2.12 or later.
-          - ansible: stable-2.9
-            python: '3.9'
-          - ansible: stable-2.9
-            python: '3.10'
-          - ansible: stable-2.10
-            python: '3.10'
-          - ansible: stable-2.11
-            python: '3.10'
-
-
-    steps:
-      - name: >-
-          Perform integration testing against
-          Ansible version ${{ matrix.ansible }}
-          under Python ${{ matrix.python }}
-        uses: ansible-community/ansible-test-gh-action@release/v1
-        with:
-          ansible-core-version: ${{ matrix.ansible }}
-          target-python-version: ${{ matrix.python }}
-          testing-type: integration
-          git-checkout-ref: ${{ github.ref }}
-
-
   check:
     # This job does nothing and is only used for the branch protection
     # or multi-stage CI jobs, like making sure that all tests pass before
@@ -183,7 +125,6 @@ jobs:
     needs:
       - sanity
       - units
-      - integration
 
     runs-on: ubuntu-latest
 
@@ -191,7 +132,7 @@ jobs:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@release/v1
         with:
-          allowed-skips: integration, units  # TODO: drop once enabled
+          allowed-skips: integration
           jobs: ${{ toJSON(needs) }}
 
 ...
