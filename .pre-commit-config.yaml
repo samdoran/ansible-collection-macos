@@ -9,12 +9,12 @@ ci:
 
 repos:
 - repo: https://github.com/asottile/add-trailing-comma.git
-  rev: v2.5.1
+  rev: v3.1.0
   hooks:
   - id: add-trailing-comma
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks.git
-  rev: v1.5.4
+  rev: v1.5.5
   hooks:
   - id: remove-tabs
 
@@ -31,7 +31,7 @@ repos:
       ^.*\.rst$
 
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   # Side-effects:
   - id: trailing-whitespace
@@ -73,7 +73,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.33.0
+  rev: v1.35.1
   hooks:
   - id: yamllint
     types:
@@ -83,7 +83,7 @@ repos:
     - --strict
 
 - repo: https://github.com/PyCQA/flake8.git
-  rev: 6.1.0
+  rev: 7.1.0
   hooks:
   - id: flake8
     alias: flake8-no-wps
@@ -98,8 +98,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/flake8.git
-  # NOTE: This is kept at v4 for until WPS starts supporting flake v5.
-  rev: 4.0.1  # enforce-version: 4.0.1
+  rev: 7.1.0
   hooks:
   - id: flake8
     alias: flake8-only-wps
@@ -112,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v2.15.9
+  rev: v3.2.4
   hooks:
   - id: pylint
 
