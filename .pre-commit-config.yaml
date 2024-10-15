@@ -31,7 +31,7 @@ repos:
       ^.*\.rst$
 
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
   # Side-effects:
   - id: trailing-whitespace
@@ -83,7 +83,7 @@ repos:
     - --strict
 
 - repo: https://github.com/PyCQA/flake8.git
-  rev: 7.1.0
+  rev: 7.1.1
   hooks:
   - id: flake8
     alias: flake8-no-wps
@@ -98,7 +98,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/flake8.git
-  rev: 7.1.0
+  rev: 7.1.1
   hooks:
   - id: flake8
     alias: flake8-only-wps
@@ -111,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v3.2.4
+  rev: v3.3.1
   hooks:
   - id: pylint
 
