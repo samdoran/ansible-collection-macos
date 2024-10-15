@@ -132,6 +132,12 @@ PARALLELS_DESKTOP_CLI_NAME = 'prlctl'
 PARALLELS_DESKTOP_CLI_LOCATION = '/usr/local/bin/'
 PARALLELS_DESKTOP_PROCESS_NAME = 'prl_client_app'
 
+_STOPPED_STATE_REQUESTS = [
+    'terminated',
+    'killed',
+    'murdered',
+]  # type: list[str]
+
 
 ANTICIPATED_KILL_FAILURES = (
     OSError if PY2
@@ -290,12 +296,7 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
             argument_spec={
                 'state': {
                     'default': 'started',
-                    'choices': [
-                        'started',
-                        'terminated',
-                        'killed',
-                        'murdered',
-                    ],
+                    'choices': ['started'] + _STOPPED_STATE_REQUESTS,
                 },
             },
             supports_check_mode=True,
@@ -306,11 +307,23 @@ class ParallelsDesktopAnsibleModule(AnsibleModule):  # noqa: WPS214
             required=True,
         )  # type: str
         self.pgrep_bin = self.get_bin_path('pgrep', required=True)  # type: str
+
+        stop_requested = self.requested_state in _STOPPED_STATE_REQUESTS
         self.prlctl_exe = self.get_bin_path(
             PARALLELS_DESKTOP_CLI_NAME,
             opt_dirs=[PARALLELS_DESKTOP_CLI_LOCATION],
-            required=True,
+            required=not stop_requested,
         )  # type: str
+
+        if not self.prlctl_exe and stop_requested:
+            self.exit_json(
+                msg=(
+                    'Achieving the `{state!s}` state succeeded. '
+                    'The system does not have Parallels Desktop '
+                    'installed. Assuming it is not running either.'.
+                    format(state=self.requested_state)
+                ),
+            )
 
     @classmethod
     def execute(cls):  # type: () -> None
