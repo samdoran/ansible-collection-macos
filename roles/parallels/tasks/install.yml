@@ -170,6 +170,22 @@
     group: staff
     mode: '0644'
 
+- name: Generate a flat Parallels installer package
+  # https://docs.parallels.com/parallels-desktop-enterprise-administrators-guide/mass-deployment-of-parallels-desktop-and-virtual-machines/mass-deployment-using-mac-management-tools/preparing-the-autodeploy-package/mandatory-creating-a-flat-package
+  command:
+    argv:
+      - >-
+        {{ autodeploy_package_scripts }}/prepare
+      - --dest
+      - >-
+        {{ autodeploy_package_root }}
+    chdir: >-
+      {{ autodeploy_package_scripts }}
+    creates: >-
+      {{ autodeploy_package }}
+  become: yes
+  become_user: root
+
 - name: Ensure the Parallels Desktop app is not running
   become: no
   parallels_desktop:
