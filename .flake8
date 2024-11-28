@@ -20,7 +20,7 @@ extend-exclude =
   # Countless third-party libs in venvs
   .tox,
   # Occasional virtualenv dir
-  .venv
+  .venv,
   # VS Code
   .vscode,
   # Temporary build dir
