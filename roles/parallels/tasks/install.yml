@@ -84,30 +84,42 @@
   shell:
     cmd: >-
       unzip -l '{{ parallels_install_cache }}/pd-autodeploy.zip'
-      'Parallels Desktop Business Edition mass deployment package v*'
+      'Parallels Desktop mass deployment package v*'
       | grep /$ | head -n1
       | sed
-      's#^.*Parallels Desktop Business Edition mass deployment package
+      's#^.*Parallels Desktop mass deployment package
       v\(.*\)/$#\1#g'
     # NOTE: `unzip` is used to list the files, not to unpack the archive.
     # NOTE: The `unarchive` module above is called conditionally so we
     # NOTE: can't rely on the files it returns.
   register: parallels_desktop_autodeploy_installer_version
 
-- name: Find Parallels auto-deploy package
+- name: Find Parallels auto-deploy package root
   set_fact:
-    autodeploy_package: >-
+    autodeploy_package_root: >-
       {{
         parallels_install_cache
-      }}/pd-autodeploy/Parallels Desktop Business Edition
+      }}/pd-autodeploy/Parallels Desktop
       mass deployment package v{{
         parallels_desktop_autodeploy_installer_version.stdout.strip()
-      }}/Parallels Desktop Autodeploy.pkg
+      }}
+
+- name: Find Parallels auto-deploy package
+  set_fact:
+    autodeploy_package_base: >-
+      {{ autodeploy_package_root }}/Parallels Desktop Autodeploy
+
+- name: Compute Parallels installer paths
+  set_fact:
+    autodeploy_package_scripts: >-
+      {{ autodeploy_package_base }}/Scripts
+    autodeploy_package: >-
+      {{ autodeploy_package_base }}.pkg
 
 - name: Define paths to Parallels auto-deploy package files
   set_fact:
-    autodeploy_config: '{{ autodeploy_package }}/License Key and Configuration/deploy.cfg'
-    autodeploy_dmg_dir: '{{ autodeploy_package }}/Parallels Desktop DMG'
+    autodeploy_config: '{{ autodeploy_package_scripts }}/License Key and Configuration/deploy.cfg'
+    autodeploy_dmg_dir: '{{ autodeploy_package_scripts }}/Parallels Desktop DMG'
 
 - name: Set license key in Parallels auto-deploy package
   replace:
@@ -157,6 +169,22 @@
     owner: administrator
     group: staff
     mode: '0644'
+
+- name: Generate a flat Parallels installer package
+  # https://docs.parallels.com/parallels-desktop-enterprise-administrators-guide/mass-deployment-of-parallels-desktop-and-virtual-machines/mass-deployment-using-mac-management-tools/preparing-the-autodeploy-package/mandatory-creating-a-flat-package
+  command:
+    argv:
+      - >-
+        {{ autodeploy_package_scripts }}/prepare
+      - --dest
+      - >-
+        {{ autodeploy_package_root }}
+    chdir: >-
+      {{ autodeploy_package_scripts }}
+    creates: >-
+      {{ autodeploy_package }}
+  become: yes
+  become_user: root
 
 - name: Ensure the Parallels Desktop app is not running
   become: no
