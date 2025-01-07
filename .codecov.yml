@@ -1,5 +1,3 @@
----
-
 codecov:
   notify:
     after_n_builds: 18  # Number of test matrix+lint jobs uploading coverage
@@ -8,7 +6,7 @@ codecov:
   require_ci_to_pass: false
 
   token: >-  # notsecret  # repo-scoped, upload-only, stability in fork PRs
-    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    496aabbc-2caf-4d68-bcf4-f1c39b30a02f
 
 comment:
   require_changes: true
@@ -22,28 +20,26 @@ coverage:
       pytest:
         target: 100%
         flags:
-        - pytest
+          - pytest
       typing:
         flags:
-        - MyPy
+          - MyPy
     project:
       default:
         target: 100%
       lib:
         flags:
-        - pytest
+          - pytest
         paths:
-        - plugins/
+          - plugins/
         target: 100%
       tests:
         flags:
-        - pytest
+          - pytest
         paths:
-        - tests/
+          - tests/
         target: 100%
       typing:
         flags:
-        - MyPy
+          - MyPy
         target: 100%
-
-...
