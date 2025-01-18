@@ -37,6 +37,8 @@
   tags:
     - parallels
     - parallels_check
+  when:
+    - parallels_assert_kexts
 
 - name: Pause to give a chance to approve the kernel modules via GUI
   ansible.builtin.pause:
@@ -56,6 +58,7 @@
     - parallels
     - parallels_check
   when:
+    - parallels_assert_kexts
     - kernel_extension_policy.stdout | int < 4  # This number is derived from the example output above
 
 - name: Check if Parallels kernel extensions are approved
@@ -66,6 +69,7 @@
     - parallels
     - parallels_check
   when:
+    - parallels_assert_kexts
     - kernel_extension_policy.stdout | int < 4  # This number is derived from the example output above
 
 - name: Check that Parallels kernel extensions are loaded
@@ -78,6 +82,8 @@
   tags:
     - parallels
     - parallels_check
+  when:
+    - parallels_assert_kexts
 
 - name: Update Parallels facts
   samdoran.macos.parallels_facts:

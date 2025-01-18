@@ -19,6 +19,7 @@ Role Variables
 | `parallels_licence_key` |  `~` | Parallels license key. |
 | `parallels_max_termination_severity` |  `murdered` | One of `terminated`, `killed` or `murdered`. |
 | `parallels_reboot_post_upgrade` |  `yes` | Reboot the host if yes, restart Parallels otherwise. |
+| `parallels_assert_kexts` |  `no` | Require that Parallels hypervisor kernel extensions are allowed. |
 
 
 Dependencies
