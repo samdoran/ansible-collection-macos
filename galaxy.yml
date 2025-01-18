@@ -1,6 +1,6 @@
 namespace: samdoran
 name: macos
-version: 2.6.0
+version: 2.6.1
 readme: README.md
 authors:
   - Sam Doran <sdoran@redhat.com>
