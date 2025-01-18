@@ -30,13 +30,47 @@
 # 4C6364ACXT|com.parallels.kext.hypervisor|1|Parallels International GmbH|1
 # 4C6364ACXT|com.parallels.kext.usbconnect|1|Parallels International GmbH|1
 #
-- name: Check if Paralles kernel extensions are approved
+- name: Check if Parallels kernel extensions are approved
   command: sqlite3 /var/db/SystemPolicyConfiguration/KextPolicy 'SELECT COUNT(*) from kext_policy WHERE team_id = "4C6364ACXT";'
   register: kernel_extension_policy
   changed_when: no
   tags:
     - parallels
     - parallels_check
+  when:
+    - parallels_assert_kexts
+
+- name: Pause to give a chance to approve the kernel modules via GUI
+  ansible.builtin.pause:
+    prompt: |
+
+      A manual kernel extension module approval has to be done post updating
+      Parallels. Connect to the host using remote graphical session and
+      confirm the respective prompts asking whether those modules are allowed
+      to be loaded.
+
+      When confirmed, go ahead and hit <Enter> to continue.
+
+      [!] The following assertion task will error out if you fail to complete this
+      one.
+
+  tags:
+    - parallels
+    - parallels_check
+  when:
+    - parallels_assert_kexts
+    - kernel_extension_policy.stdout | int < 4  # This number is derived from the example output above
+
+- name: Check if Parallels kernel extensions are approved
+  command: sqlite3 /var/db/SystemPolicyConfiguration/KextPolicy 'SELECT COUNT(*) from kext_policy WHERE team_id = "4C6364ACXT";'
+  register: kernel_extension_policy
+  changed_when: no
+  tags:
+    - parallels
+    - parallels_check
+  when:
+    - parallels_assert_kexts
+    - kernel_extension_policy.stdout | int < 4  # This number is derived from the example output above
 
 - name: Check that Parallels kernel extensions are loaded
   assert:
@@ -48,6 +82,8 @@
   tags:
     - parallels
     - parallels_check
+  when:
+    - parallels_assert_kexts
 
 - name: Update Parallels facts
   samdoran.macos.parallels_facts:
