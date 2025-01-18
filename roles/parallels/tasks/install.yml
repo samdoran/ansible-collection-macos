@@ -223,6 +223,11 @@
 
 - name: Reboot
   reboot:
+  vars:
+    # Ref: https://github.com/samdoran/ansible-collection-macos/issues/50
+    ansible_ssh_args: >-  # Probe via new SSH connections w/ loss detection on
+      -o ControlMaster=no
+      -o ServerAliveInterval=30
   when:
     - parallels_install is changed
     - parallels_reboot_post_upgrade
