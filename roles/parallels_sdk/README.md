@@ -3,6 +3,8 @@ Parallels SDK
 
 Install the Parallels Python SDK.
 
+⚠️ The [Parallels Python SDK is deprecated]. This role is no longer under development. ⚠️
+
 Requirements
 ------------
 
@@ -39,3 +41,6 @@ License
 -------
 
 Apache 2.0
+
+
+[Parallels Python SDK is deprecated]: https://kb.parallels.com/130091
