@@ -141,7 +141,7 @@
 
 - name: Enumerate pre-existing DMGs under the auto-deploy package
   find:
-    file_type: file
+    file_type: any  # `file` doesn't match symlinks
     paths: >-
       {{ autodeploy_dmg_dir }}
     patterns: ParallelsDesktop-*.dmg
