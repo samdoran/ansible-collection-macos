@@ -170,6 +170,16 @@
     group: staff
     mode: '0644'
 
+- name: Wipe pre-existing flat Parallels installer package
+  # ... because the following step invoking the `prepare` script exits
+  # with `rc=0` while hitting `abort "File already exist: '$target_file'"`
+  # if there's a matching PKG file in the destination.
+  file:
+    follow: no
+    path: >-
+      {{ autodeploy_package }}
+    state: absent
+
 - name: Generate a flat Parallels installer package
   # https://docs.parallels.com/parallels-desktop-enterprise-administrators-guide/mass-deployment-of-parallels-desktop-and-virtual-machines/mass-deployment-using-mac-management-tools/preparing-the-autodeploy-package/mandatory-creating-a-flat-package
   command:
