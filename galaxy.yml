@@ -19,9 +19,9 @@ tags:
 
 dependencies: {}
 
-repository: http://github.com/samdoran/ansible-collection-macos
-documentation: http://github.com/samdoran/ansible-collection-macos/README.md
-homepage: http://github.com/samdoran/ansible-collection-macos
-issues: http://github.com/samdoran/ansible-collection-macos/issues
+repository: https://github.com/samdoran/ansible-collection-macos
+documentation: https://github.com/samdoran/ansible-collection-macos?tab=readme-ov-file#readme
+homepage: https://github.com/samdoran/ansible-collection-macos
+issues: https://github.com/samdoran/ansible-collection-macos/issues
 
 build_ignore: []
