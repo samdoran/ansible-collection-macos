@@ -11,6 +11,7 @@ __metaclass__ = type
 
 
 import signal
+import sys
 
 try:
     import typing as t  # noqa: F401
@@ -18,8 +19,18 @@ except ImportError:
     pass
 
 
-from ansible.module_utils.six import raise_from
 from ansible.module_utils.six.moves import shlex_quote as _shlex_quote
+
+if sys.version_info[:2] > (3,):
+    exec("""def raise_from(value, from_value):
+    try:
+        raise value from from_value
+    finally:
+        value = None
+""")
+else:
+    def raise_from(value, from_value):
+        raise value
 
 
 try:
