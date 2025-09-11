@@ -104,6 +104,7 @@ stderr:
 import errno
 import os
 import signal
+import sys
 import time
 import traceback
 
@@ -112,10 +113,9 @@ try:
 except ImportError:
     pass
 
-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text
-from ansible.module_utils.six import PY2, raise_from
+from ..module_utils.python_runtime_compat import raise_from
 
 from ..module_utils.python_runtime_compat import (  # noqa: WPS300
     get_signal_name,
@@ -123,6 +123,7 @@ from ..module_utils.python_runtime_compat import (  # noqa: WPS300
     TimeoutError,
 )
 
+PY2 = sys.version_info[0] == 2
 
 VM_SHUTDOWN_GRACE_DELAY = 30
 
