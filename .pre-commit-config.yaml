@@ -31,7 +31,7 @@ repos:
       ^.*\.rst$
 
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   # Side-effects:
   - id: trailing-whitespace
@@ -111,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v3.3.7
+  rev: v3.3.9
   hooks:
   - id: pylint
 
