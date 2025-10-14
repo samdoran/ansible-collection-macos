@@ -31,7 +31,7 @@ repos:
       ^.*\.rst$
 
 - repo: https://github.com/pre-commit/pre-commit-hooks.git
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   # Side-effects:
   - id: trailing-whitespace
@@ -57,7 +57,7 @@ repos:
     exclude: cheroot/test/(helper|webtest|_pytest_plugin).py
     files: cheroot/test/.+\.py$
   - id: check-added-large-files
-  - id: check-byte-order-marker
+  - id: fix-byte-order-marker
   - id: check-case-conflict
   # disabled due to pre-commit/pre-commit-hooks#159
   # - id: check-docstring-first
@@ -111,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v3.3.7
+  rev: v3.3.9
   hooks:
   - id: pylint
 
