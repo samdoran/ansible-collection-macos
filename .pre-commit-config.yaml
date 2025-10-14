@@ -57,7 +57,7 @@ repos:
     exclude: cheroot/test/(helper|webtest|_pytest_plugin).py
     files: cheroot/test/.+\.py$
   - id: check-added-large-files
-  - id: check-byte-order-marker
+  - id: fix-byte-order-marker
   - id: check-case-conflict
   # disabled due to pre-commit/pre-commit-hooks#159
   # - id: check-docstring-first
