@@ -126,7 +126,7 @@ def get_server_info(module, data):
             srv_info = json.loads(out)
 
             for k in srv_info:
-                data[k.replace(" ", "_")] = srv_info[k]
+                data[k.replace(' ', '_')] = srv_info[k]
 
             # 'Version': 'Desktop 16.0.0-48916',
             version_string = srv_info['Version']
