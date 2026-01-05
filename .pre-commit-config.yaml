@@ -9,7 +9,7 @@ ci:
 
 repos:
 - repo: https://github.com/asottile/add-trailing-comma.git
-  rev: v3.2.0
+  rev: v4.0.0
   hooks:
   - id: add-trailing-comma
 
@@ -111,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v3.3.9
+  rev: v4.0.4
   hooks:
   - id: pylint
 
