@@ -14,7 +14,7 @@ repos:
   - id: add-trailing-comma
 
 - repo: https://github.com/Lucas-C/pre-commit-hooks.git
-  rev: v1.5.5
+  rev: v1.5.6
   hooks:
   - id: remove-tabs
 
@@ -73,7 +73,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.37.1
+  rev: v1.38.0
   hooks:
   - id: yamllint
     types:
@@ -111,7 +111,7 @@ repos:
     language_version: python3
 
 - repo: https://github.com/PyCQA/pylint.git
-  rev: v4.0.4
+  rev: v4.0.5
   hooks:
   - id: pylint
 
